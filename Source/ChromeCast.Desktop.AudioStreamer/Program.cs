@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Practices.Unity;
 using ChromeCast.Desktop.AudioStreamer.Application;
 using ChromeCast.Desktop.AudioStreamer.Communication;
 using ChromeCast.Desktop.AudioStreamer.Discover;

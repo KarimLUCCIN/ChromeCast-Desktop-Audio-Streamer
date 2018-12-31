@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using Rssdp;
 using NAudio.Wave;
-using Microsoft.Practices.Unity;
 using ChromeCast.Desktop.AudioStreamer.Communication;
 using ChromeCast.Desktop.AudioStreamer.Communication.Classes;
 using ChromeCast.Desktop.AudioStreamer.UserControls;
