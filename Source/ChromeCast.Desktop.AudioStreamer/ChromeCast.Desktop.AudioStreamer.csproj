@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ChromeCast.Desktop.AudioStreamer</RootNamespace>
     <AssemblyName>ChromeCast.Desktop.AudioStreamer</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -37,6 +37,10 @@
     <ApplicationIcon>ChromeCast.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Google.ProtocolBuffers, Version=2.4.1.555, Culture=neutral, PublicKeyToken=55f7125234beb589, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Tools\ProtocolBuffers\Google.ProtocolBuffers.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows" />
@@ -48,21 +52,7 @@
     <Compile Include="Application\Configuration.cs" />
     <Compile Include="Application\Device.cs" />
     <Compile Include="Application\Devices.cs" />
-    <Compile Include="Classes\Network.cs" />
-    <Compile Include="Classes\NetworkAdapter.cs" />
-    <Compile Include="Discover\DiscoverDevices.cs" />
-    <Compile Include="Application\DeviceStatusTimer.cs" />
-    <Compile Include="Classes\CastDeviceCapabilities.cs" />
     <Compile Include="Classes\SetWindowsHook.cs" />
-    <Compile Include="Communication\ChromeCastMessages.cs" />
-    <Compile Include="Communication\Classes\ChromeCastClasses.cs" />
-    <Compile Include="Communication\DeviceCommunication.cs" />
-    <Compile Include="Communication\DeviceConnection.cs" />
-    <Compile Include="Communication\DeviceConnectionState.cs" />
-    <Compile Include="Communication\DeviceReceiveBuffer.cs" />
-    <Compile Include="Communication\DeviceState.cs" />
-    <Compile Include="Discover\DiscoverServiceSSDP.cs" />
-    <Compile Include="Application\Logger.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,11 +61,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtocolBuffer\ChromeCastAudioStream.cs" />
-    <Compile Include="Streaming\StreamingRequestsListener.cs" />
-    <Compile Include="Streaming\LoopbackRecorder.cs" />
-    <Compile Include="Streaming\Riff.cs" />
-    <Compile Include="Streaming\StreamingConnection.cs" />
     <Compile Include="UserControls\DeviceControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -131,9 +116,6 @@
     </PackageReference>
     <PackageReference Include="CSCore">
       <Version>1.2.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="Google.ProtocolBuffers">
-      <Version>2.4.1.555</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.Platforms">
       <Version>2.2.0</Version>
@@ -339,6 +321,12 @@
     <PackageReference Include="Zeroconf">
       <Version>3.0.30</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChromeCast.Library\ChromeCast.Library.csproj">
+      <Project>{8572bfe0-f2d1-46ce-8221-a43dd0bd1780}</Project>
+      <Name>ChromeCast.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

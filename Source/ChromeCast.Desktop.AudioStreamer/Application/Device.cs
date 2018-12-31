@@ -3,12 +3,11 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using Rssdp;
 using NAudio.Wave;
-using ChromeCast.Desktop.AudioStreamer.Communication;
-using ChromeCast.Desktop.AudioStreamer.Communication.Classes;
 using ChromeCast.Desktop.AudioStreamer.UserControls;
-using ChromeCast.Desktop.AudioStreamer.Classes;
-using ChromeCast.Desktop.AudioStreamer.Streaming;
 using ChromeCast.Desktop.AudioStreamer.ProtocolBuffer;
+using ChromeCast.Library.Communication;
+using ChromeCast.Library.Streaming;
+using ChromeCast.Library.Communication.Classes;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {

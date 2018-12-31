@@ -1,8 +1,5 @@
 ﻿using System;
 using ChromeCast.Desktop.AudioStreamer.Application;
-using ChromeCast.Desktop.AudioStreamer.Communication;
-using ChromeCast.Desktop.AudioStreamer.Discover;
-using ChromeCast.Desktop.AudioStreamer.Streaming;
 using ChromeCast.Desktop.AudioStreamer.Classes;
 
 namespace ChromeCast.Desktop.AudioStreamer

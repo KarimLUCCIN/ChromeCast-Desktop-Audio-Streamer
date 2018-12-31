@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using Rssdp;
 using NAudio.Wave;
-using ChromeCast.Desktop.AudioStreamer.Communication;
-using ChromeCast.Desktop.AudioStreamer.Classes;
 using System.Timers;
+using ChromeCast.Library.Application;
+using ChromeCast.Library.Communication;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {

@@ -10,6 +10,10 @@ using System.Net.NetworkInformation;
 using System.Linq;
 using Q42.HueApi;
 using System.Diagnostics;
+using System.Collections.Generic;
+using ChromeCast.Library.Application;
+using ChromeCast.Library;
+using ChromeCast.Library.Classes;
 
 namespace ChromeCast.Desktop.AudioStreamer
 {
@@ -24,12 +28,12 @@ namespace ChromeCast.Desktop.AudioStreamer
             logger = new Logger();
             applicationLogic = new ApplicationLogic(
                 devices = new Devices(logger), 
-                new Discover.DiscoverDevices(
-                    new Discover.DiscoverServiceSSDP()
+                new Library.Discover.DiscoverDevices(
+                    new Library.Discover.DiscoverServiceSSDP()
                 ), 
-                new Streaming.LoopbackRecorder(), 
+                new Library.Streaming.LoopbackRecorder(), 
                 new Configuration(), 
-                new Streaming.StreamingRequestsListener(), 
+                new Library.Streaming.StreamingRequestsListener(), 
                 new DeviceStatusTimer()
             );
 
@@ -239,11 +243,11 @@ namespace ChromeCast.Desktop.AudioStreamer
             devices.Sync();
         }
 
-        public void AddRecordingDevices(MMDeviceCollection devices, MMDevice defaultdevice)
+        public void AddRecordingDevices(IEnumerable<MMDevice> devices, MMDevice defaultdevice)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<MMDeviceCollection, MMDevice>(AddRecordingDevices), new object[] { devices, defaultdevice });
+                Invoke(new Action<IEnumerable<MMDevice>, MMDevice>(AddRecordingDevices), new object[] { devices, defaultdevice });
                 return;
             }
             if (IsDisposed) return;

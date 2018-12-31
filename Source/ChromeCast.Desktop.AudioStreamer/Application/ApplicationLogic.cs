@@ -7,8 +7,10 @@ using Rssdp;
 using NAudio.Wave;
 using ChromeCast.Desktop.AudioStreamer.Classes;
 using System.Net;
-using ChromeCast.Desktop.AudioStreamer.Streaming;
-using ChromeCast.Desktop.AudioStreamer.Discover;
+using ChromeCast.Library.Streaming;
+using ChromeCast.Library.Discover;
+using ChromeCast.Library.Application;
+using ChromeCast.Library.Classes;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {
@@ -49,7 +51,9 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             configuration.Load(SetConfiguration);
             ScanForDevices();
             deviceStatusTimer.StartPollingDevice(devices.OnGetStatus);
-            loopbackRecorder.GetDevices(mainForm);
+
+            var devicesInfo = LoopbackRecorder.GetDevices();
+            mainForm.AddRecordingDevices(devicesInfo.devices, devicesInfo.defaultDevice);
         }
 
         private void ToggleFormVisibility(object sender, EventArgs e)
@@ -74,7 +78,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         {
             Console.WriteLine(string.Format("Connection added from {0}", socket.RemoteEndPoint));
 
-            loopbackRecorder.StartRecording((ArraySegment<byte> dataToSend, WaveFormat format) => {
+            loopbackRecorder.StartRecording(LoopbackRecorder.GetDevices().defaultDevice, (ArraySegment<byte> dataToSend, WaveFormat format) => {
                 OnRecordingDataAvailable(dataToSend, format);
             });
             devices.AddStreamingConnection(socket, httpRequest);
@@ -177,7 +181,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
 
         public void RecordingDeviceChanged()
         {
-            loopbackRecorder.StartRecordingDevice();
+            loopbackRecorder.StartRecordingDevice(LoopbackRecorder.GetDevices().defaultDevice);
         }
 
         public void OnSetAutoRestart(bool autoRestart)
