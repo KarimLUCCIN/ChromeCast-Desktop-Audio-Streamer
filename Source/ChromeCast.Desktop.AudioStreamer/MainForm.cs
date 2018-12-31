@@ -8,6 +8,8 @@ using ChromeCast.Desktop.AudioStreamer.Classes;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Linq;
+using Q42.HueApi;
+using System.Diagnostics;
 
 namespace ChromeCast.Desktop.AudioStreamer
 {
@@ -36,6 +38,23 @@ namespace ChromeCast.Desktop.AudioStreamer
             logger.SetCallback(Log);
             devices.SetDependencies(this, applicationLogic);
             applicationLogic.SetDependencies(this);
+
+            TestHueStuff();
+        }
+
+        static readonly string AppName = "MiniCast.Hue";
+        private async void TestHueStuff()
+        {
+            var locator = new HttpBridgeLocator();
+            var bridgeIPs = await locator.LocateBridgesAsync(TimeSpan.FromSeconds(5));
+
+            foreach(var item in bridgeIPs)
+            {
+                Debug.WriteLine($"{item.BridgeId} at {item.IpAddress}");
+                // var client = new LocalHueClient(item.IpAddress);
+                // var appKey = await client.RegisterAsync(AppName, Environment.MachineName);
+                // Debug.WriteLine($"Key: {appKey}");
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
