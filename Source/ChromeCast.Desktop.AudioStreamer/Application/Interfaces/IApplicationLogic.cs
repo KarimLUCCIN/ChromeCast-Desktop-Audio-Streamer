@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using NAudio.Wave;
 
@@ -11,7 +12,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application.Interfaces
         void SetLagThreshold(int lagThreshold);
         void OnAddDevice(IDevice device);
         void OnSetHooks(bool @checked);
-        void OnRecordingDataAvailable(byte[] dataToSend, WaveFormat waveFormat);
+        void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat waveFormat);
         void OnStreamingRequestsListen(string host, int port);
         void OnStreamingRequestConnect(Socket handlerSocket, string httpRequest);
         void SetDependencies(MainForm mainForm);

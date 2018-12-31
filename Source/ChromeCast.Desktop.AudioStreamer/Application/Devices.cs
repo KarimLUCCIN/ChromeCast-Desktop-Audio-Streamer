@@ -106,7 +106,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             }
         }
 
-        public void OnRecordingDataAvailable(byte[] dataToSend, WaveFormat format, int reduceLagThreshold)
+        public void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format, int reduceLagThreshold)
         {
             foreach (var device in deviceList)
             {

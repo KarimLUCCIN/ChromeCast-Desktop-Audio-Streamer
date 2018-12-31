@@ -74,11 +74,13 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         {
             Console.WriteLine(string.Format("Connection added from {0}", socket.RemoteEndPoint));
 
-            loopbackRecorder.StartRecording(OnRecordingDataAvailable);
+            loopbackRecorder.StartRecording((ArraySegment<byte> dataToSend, WaveFormat format) => {
+                OnRecordingDataAvailable(dataToSend, format);
+            });
             devices.AddStreamingConnection(socket, httpRequest);
         }
 
-        public void OnRecordingDataAvailable(byte[] dataToSend, WaveFormat format)
+        public void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format)
         {
             devices.OnRecordingDataAvailable(dataToSend, format, reduceLagThreshold);
         }

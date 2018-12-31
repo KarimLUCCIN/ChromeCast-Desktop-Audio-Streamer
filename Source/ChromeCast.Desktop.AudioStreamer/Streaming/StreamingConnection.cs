@@ -19,7 +19,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Streaming
             isRiffHeaderSent = false;
         }
 
-        public void SendData(byte[] dataToSend, WaveFormat format, int reduceLagThreshold)
+        public void SendData(ArraySegment<byte> dataToSend, WaveFormat format, int reduceLagThreshold)
         {
             if (reduceLagThreshold < 1000)
             {
@@ -34,19 +34,19 @@ namespace ChromeCast.Desktop.AudioStreamer.Streaming
             if (!isRiffHeaderSent)
             {
                 isRiffHeaderSent = true;
-                Send(riff.GetRiffHeader(format));
+                Send(new ArraySegment<byte>(riff.GetRiffHeader(format)));
             }
 
             Send(dataToSend);
         }
 
-        public void Send(byte[] data)
+        public void Send(ArraySegment<byte> data)
         {
             if (Socket != null && Socket.Connected)
             {
                 try
                 {
-                    Socket.Send(data);
+                    Socket.Send(new[] { data });
                 }
                 catch (Exception)
                 {
@@ -57,7 +57,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Streaming
         public void SendStartStreamingResponse()
         {
             var startStreamingResponse = Encoding.ASCII.GetBytes(GetStartStreamingResponse());
-            Send(startStreamingResponse);
+            Send(new ArraySegment<byte>(startStreamingResponse));
         }
 
         private string GetStartStreamingResponse()

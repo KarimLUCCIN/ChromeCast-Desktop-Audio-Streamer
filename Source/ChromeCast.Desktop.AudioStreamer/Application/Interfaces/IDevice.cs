@@ -17,7 +17,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         void SetDiscoveredDevices(DiscoveredSsdpDevice device, SsdpDevice fullDevice);
         bool AddStreamingConnection(string remoteAddress, Socket socket);
         void OnGetStatus();
-        void OnRecordingDataAvailable(byte[] dataToSend, WaveFormat format, int reduceLagThreshold);
+        void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format, int reduceLagThreshold);
         void OnClickDeviceButton(object sender, EventArgs e);
         string GetUsn();
         string GetHost();
