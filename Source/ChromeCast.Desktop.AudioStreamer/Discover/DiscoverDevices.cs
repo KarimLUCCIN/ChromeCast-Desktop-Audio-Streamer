@@ -49,6 +49,11 @@ namespace ChromeCast.Desktop.AudioStreamer.Discover
         {
             if (protocol.StartsWith("_googlecast"))
             {
+                if (ipAddress.Contains(':'))
+                {
+                    ipAddress = ipAddress.Substring(0, ipAddress.IndexOf(':'));
+                }
+
                 onDiscovered(
                     new DiscoveredSsdpDevice { DescriptionLocation = new Uri($"http://{ipAddress}"), Usn = ipAddress },
                    new SsdpRootDevice { FriendlyName = GetDeviceFriendlyNameAsync(ipAddress).Result }
