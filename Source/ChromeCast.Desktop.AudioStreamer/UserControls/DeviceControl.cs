@@ -9,9 +9,9 @@ namespace ChromeCast.Desktop.AudioStreamer.UserControls
 {
     public partial class DeviceControl : UserControl
     {
-        private IDevice device;
+        private Device device;
 
-        public DeviceControl(IDevice deviceIn)
+        public DeviceControl(Device deviceIn)
         {
             InitializeComponent();
             device = deviceIn;

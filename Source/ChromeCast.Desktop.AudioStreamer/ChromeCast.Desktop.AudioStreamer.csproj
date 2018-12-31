@@ -109,14 +109,7 @@
     <Compile Include="Classes\NetworkAdapter.cs" />
     <Compile Include="Discover\DiscoverDevices.cs" />
     <Compile Include="Application\DeviceStatusTimer.cs" />
-    <Compile Include="Application\Interfaces\IConfiguration.cs" />
-    <Compile Include="Application\Interfaces\IApplicationLogic.cs" />
-    <Compile Include="Application\Interfaces\IDevice.cs" />
-    <Compile Include="Application\Interfaces\IDevices.cs" />
-    <Compile Include="Discover\Interfaces\IDiscoverDevices.cs" />
-    <Compile Include="Application\Interfaces\IDeviceStatusTimer.cs" />
     <Compile Include="Classes\CastDeviceCapabilities.cs" />
-    <Compile Include="Classes\DependencyFactory.cs" />
     <Compile Include="Classes\SetWindowsHook.cs" />
     <Compile Include="Communication\ChromeCastMessages.cs" />
     <Compile Include="Communication\Classes\ChromeCastClasses.cs" />
@@ -125,14 +118,7 @@
     <Compile Include="Communication\DeviceConnectionState.cs" />
     <Compile Include="Communication\DeviceReceiveBuffer.cs" />
     <Compile Include="Communication\DeviceState.cs" />
-    <Compile Include="Communication\Interfaces\IChromeCastMessages.cs" />
-    <Compile Include="Communication\Interfaces\IDeviceCommunication.cs" />
-    <Compile Include="Communication\Interfaces\IDeviceConnection.cs" />
-    <Compile Include="Communication\Interfaces\IDeviceReceiveBuffer.cs" />
     <Compile Include="Discover\DiscoverServiceSSDP.cs" />
-    <Compile Include="Discover\Interfaces\IDiscoverServiceSSDP.cs" />
-    <Compile Include="Application\Interfaces\ILogger.cs" />
-    <Compile Include="IMainForm.cs" />
     <Compile Include="Application\Logger.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -143,11 +129,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolBuffer\ChromeCastAudioStream.cs" />
-    <Compile Include="Streaming\Interfaces\IStreamingRequestsListener.cs" />
-    <Compile Include="Streaming\Interfaces\IRiff.cs" />
     <Compile Include="Streaming\StreamingRequestsListener.cs" />
-    <Compile Include="Streaming\Interfaces\ILoopbackRecorder.cs" />
-    <Compile Include="Streaming\Interfaces\IStreamingConnection.cs" />
     <Compile Include="Streaming\LoopbackRecorder.cs" />
     <Compile Include="Streaming\Riff.cs" />
     <Compile Include="Streaming\StreamingConnection.cs" />

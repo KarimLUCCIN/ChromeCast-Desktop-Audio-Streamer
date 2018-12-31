@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using ChromeCast.Desktop.AudioStreamer.Streaming.Interfaces;
 using NAudio.Wave;
 using CSCore.CoreAudioAPI;
 using CSCore.SoundIn;
@@ -12,7 +11,7 @@ using System.Diagnostics;
 
 namespace ChromeCast.Desktop.AudioStreamer.Streaming
 {
-    public class LoopbackRecorder : ILoopbackRecorder
+    public class LoopbackRecorder
     {
         WasapiCapture soundIn;
         private Action<ArraySegment<byte>, NAudio.Wave.WaveFormat> dataAvailableCallback;
@@ -20,7 +19,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Streaming
         IWaveSource convertedSource;
         SoundInSource soundInSource;
         NAudio.Wave.WaveFormat waveFormat;
-        IMainForm mainForm;
+        MainForm mainForm;
 
         class BufferBlock
         {
@@ -181,7 +180,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Streaming
             }
         }
 
-        public void GetDevices(IMainForm mainFormIn)
+        public void GetDevices(MainForm mainFormIn)
         {
             mainForm = mainFormIn;
             var defaultDevice = MMDeviceEnumerator.DefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);

@@ -1,12 +1,11 @@
 ﻿using System;
 using Rssdp;
-using ChromeCast.Desktop.AudioStreamer.Discover.Interfaces;
 using System.Net;
 using System.Net.Sockets;
 
 namespace ChromeCast.Desktop.AudioStreamer.Discover
 {
-    public class DiscoverServiceSSDP : IDiscoverServiceSSDP
+    public class DiscoverServiceSSDP
     {
         private const string ChromeCastUpnpDeviceType = "urn:dial-multiscreen-org:device:dial:1";
         private Action<DiscoveredSsdpDevice, SsdpDevice> onDiscovered;

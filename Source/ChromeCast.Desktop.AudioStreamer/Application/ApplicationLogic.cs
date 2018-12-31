@@ -6,33 +6,31 @@ using System.Windows.Forms;
 using Rssdp;
 using NAudio.Wave;
 using ChromeCast.Desktop.AudioStreamer.Classes;
-using ChromeCast.Desktop.AudioStreamer.Application.Interfaces;
-using ChromeCast.Desktop.AudioStreamer.Streaming.Interfaces;
-using ChromeCast.Desktop.AudioStreamer.Discover.Interfaces;
 using System.Net;
+using ChromeCast.Desktop.AudioStreamer.Streaming;
+using ChromeCast.Desktop.AudioStreamer.Discover;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {
-    public class ApplicationLogic : IApplicationLogic
+    public class ApplicationLogic
     {
-        private IDevices devices;
-        private IMainForm mainForm;
-        private IConfiguration configuration;
-        private ILoopbackRecorder loopbackRecorder;
-        private IStreamingRequestsListener streamingRequestListener;
-        private IDiscoverDevices discoverDevices;
-        private IDeviceStatusTimer deviceStatusTimer;
+        private Devices devices;
+        private MainForm mainForm;
+        private Configuration configuration;
+        private LoopbackRecorder loopbackRecorder;
+        private StreamingRequestsListener streamingRequestListener;
+        private DiscoverDevices discoverDevices;
+        private DeviceStatusTimer deviceStatusTimer;
         private NotifyIcon notifyIcon;
         private const int trbLagMaximumValue = 1000;
-        private int reduceLagThreshold = trbLagMaximumValue;
         private string streamingUrl = string.Empty;
         private bool playingOnIpChange;
 
         private bool AutoRestart { get; set; } = false;
 
-        public ApplicationLogic(IDevices devicesIn, IDiscoverDevices discoverDevicesIn
-            , ILoopbackRecorder loopbackRecorderIn, IConfiguration configurationIn
-            , IStreamingRequestsListener streamingRequestListenerIn, IDeviceStatusTimer deviceStatusTimerIn)
+        public ApplicationLogic(Devices devicesIn, DiscoverDevices discoverDevicesIn
+            , LoopbackRecorder loopbackRecorderIn, Configuration configurationIn
+            , StreamingRequestsListener streamingRequestListenerIn, DeviceStatusTimer deviceStatusTimerIn)
         {
             devices = devicesIn;
             devices.SetCallback(OnAddDevice);
@@ -68,6 +66,8 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         {
             Console.WriteLine(string.Format("Streaming from {0}:{1}", host, port));
             streamingUrl = string.Format("http://{0}:{1}/", host, port);
+
+            devices.SetStreamingUrl(streamingUrl);
         }
 
         public void OnStreamingRequestConnect(Socket socket, string httpRequest)
@@ -82,7 +82,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
 
         public void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format)
         {
-            devices.OnRecordingDataAvailable(dataToSend, format, reduceLagThreshold);
+            devices.OnRecordingDataAvailable(dataToSend, format);
         }
 
         public void OnSetHooks(bool setHooks)
@@ -93,7 +93,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
                 SetWindowsHook.Stop();
         }
 
-        public void OnAddDevice(IDevice device)
+        public void OnAddDevice(Device device)
         {
             var menuItem = new MenuItem();
             menuItem.Text = device.GetFriendlyName();
@@ -129,7 +129,6 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
 
         public void SetLagThreshold(int lagThreshold)
         {
-            reduceLagThreshold = lagThreshold;
         }
 
         public void SetConfiguration(bool useShortCuts, bool showLog, bool showLagControl, int lagValue, bool autoStart, string ipAddressesDevices, bool showWindow, bool autoRestart)

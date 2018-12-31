@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeCast.Desktop.AudioStreamer", ".\ChromeCast.Desktop.AudioStreamer\ChromeCast.Desktop.AudioStreamer.csproj", "{4133DCC6-8CBF-4E67-B798-2EE414A5726C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeCast.Desktop.AudioStreamer.Test", ".\ChromeCast.Desktop.AudioStreamer.Test\ChromeCast.Desktop.AudioStreamer.Test.csproj", "{C54E3941-F6BE-4FC5-9994-CBA18155CA28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeCast.Desktop.AudioStreamer", "ChromeCast.Desktop.AudioStreamer\ChromeCast.Desktop.AudioStreamer.csproj", "{4133DCC6-8CBF-4E67-B798-2EE414A5726C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +15,11 @@ Global
 		{4133DCC6-8CBF-4E67-B798-2EE414A5726C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4133DCC6-8CBF-4E67-B798-2EE414A5726C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4133DCC6-8CBF-4E67-B798-2EE414A5726C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C54E3941-F6BE-4FC5-9994-CBA18155CA28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C54E3941-F6BE-4FC5-9994-CBA18155CA28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C54E3941-F6BE-4FC5-9994-CBA18155CA28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C54E3941-F6BE-4FC5-9994-CBA18155CA28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14054FCC-735C-4267-88D1-D992323DA0F9}
 	EndGlobalSection
 EndGlobal

@@ -1,17 +1,16 @@
 ﻿using System.IO;
 using System.Text;
 using NAudio.Wave;
-using ChromeCast.Desktop.AudioStreamer.Streaming.Interfaces;
 using System;
 
 namespace ChromeCast.Desktop.AudioStreamer.Streaming
 {
-    public class Riff : IRiff
+    public static class Riff
     {
         /// <summary>
         /// Generate a header for a maximum length WAV stream.
         /// </summary>
-        public byte[] GetRiffHeader(WaveFormat format)
+        public static byte[] GetRiffHeader(WaveFormat format)
         {
             var riffHeaderStream = new MemoryStream();
             WriteWavHeader(riffHeaderStream, format.Encoding == WaveFormatEncoding.IeeeFloat, (ushort)format.Channels, (ushort)format.BitsPerSample, format.SampleRate, 0);

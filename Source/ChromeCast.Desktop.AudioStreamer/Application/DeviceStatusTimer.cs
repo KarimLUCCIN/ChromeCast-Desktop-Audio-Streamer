@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Timers;
-using ChromeCast.Desktop.AudioStreamer.Application.Interfaces;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {
-    public class DeviceStatusTimer : IDeviceStatusTimer
+    public class DeviceStatusTimer
     {
         public const int Interval = 10000;
         private Action onGetStatus;

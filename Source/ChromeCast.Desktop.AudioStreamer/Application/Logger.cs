@@ -1,9 +1,8 @@
 ﻿using System;
-using ChromeCast.Desktop.AudioStreamer.Application.Interfaces;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {
-    public class Logger : ILogger
+    public class Logger
     {
         private Action<string> logCallback;
 

@@ -7,19 +7,17 @@ using Microsoft.Practices.Unity;
 using ChromeCast.Desktop.AudioStreamer.Communication;
 using ChromeCast.Desktop.AudioStreamer.Communication.Classes;
 using ChromeCast.Desktop.AudioStreamer.UserControls;
-using ChromeCast.Desktop.AudioStreamer.Streaming.Interfaces;
-using ChromeCast.Desktop.AudioStreamer.Communication.Interfaces;
 using ChromeCast.Desktop.AudioStreamer.Classes;
 using ChromeCast.Desktop.AudioStreamer.Streaming;
 using ChromeCast.Desktop.AudioStreamer.ProtocolBuffer;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {
-    public class Device : IDevice
+    public class Device
     {
-        private IDeviceCommunication deviceCommunication;
-        private IStreamingConnection streamingConnection;
-        private IDeviceConnection deviceConnection;
+        private DeviceCommunication deviceCommunication;
+        private StreamingConnection streamingConnection;
+        private DeviceConnection deviceConnection;
         private DiscoveredSsdpDevice discoveredSsdpDevice;
         private SsdpDevice ssdpDevice;
         private DeviceState deviceState;
@@ -27,8 +25,9 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         private MenuItem menuItem;
         private Volume volumeSetting;
         private DateTime lastVolumeChange;
+        private string streamingUrl;
 
-        public Device(IDeviceConnection deviceConnectionIn, IDeviceCommunication deviceCommunicationIn)
+        public Device(DeviceConnection deviceConnectionIn, DeviceCommunication deviceCommunicationIn)
         {
             deviceConnection = deviceConnectionIn;
             deviceConnection.SetCallback(GetHost, SetDeviceState, OnReceiveMessage);
@@ -52,22 +51,22 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
 
         public void OnClickDeviceButton(object sender, EventArgs e)
         {
-            deviceCommunication.OnClickDeviceButton(deviceState);
+            deviceCommunication.OnClickDeviceButton(deviceState, streamingUrl);
         }
 
         public void Start()
         {
-            deviceCommunication.LoadMedia();
+            deviceCommunication.LoadMedia(streamingUrl);
         }
 
-        public void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format, int reduceLagThreshold)
+        public void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format)
         {
             if (streamingConnection != null)
             {
                 if (streamingConnection.IsConnected())
                 {
                     if (deviceState == DeviceState.Buffering || deviceState == DeviceState.Playing)
-                        streamingConnection.SendData(dataToSend, format, reduceLagThreshold);
+                        streamingConnection.SendData(dataToSend, format);
                 }
                 else
                 {
@@ -86,6 +85,11 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         {
             deviceState = state;
             deviceControl?.SetStatus(state, text);
+        }
+
+        public void SetStreamingUrl(string streamingUrl)
+        {
+            this.streamingUrl = streamingUrl;
         }
 
         public bool IsConnected()
@@ -156,7 +160,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         {
             if (discoveredSsdpDevice.DescriptionLocation.Host.Equals(remoteAddress))
             {
-                streamingConnection = DependencyFactory.Container.Resolve<StreamingConnection>();
+                streamingConnection = new StreamingConnection();
                 streamingConnection.SetSocket(socket);
                 streamingConnection.SendStartStreamingResponse();
                 return true;
@@ -214,14 +218,14 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             return menuItem;
         }
 
-        public IDeviceConnection GetDeviceConnection()
+        public DeviceConnection GetDeviceConnection()
         {
             return deviceConnection;
         }
 
         public void OnReceiveMessage(CastMessage castMessage)
         {
-            deviceCommunication?.OnReceiveMessage(castMessage);
+            deviceCommunication?.OnReceiveMessage(castMessage, streamingUrl);
         }
     }
 }

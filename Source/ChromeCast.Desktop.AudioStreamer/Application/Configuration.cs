@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Configuration;
-using ChromeCast.Desktop.AudioStreamer.Application.Interfaces;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {
-    public class Configuration : IConfiguration
+    public class Configuration
     {
         public void Load(Action<bool, bool, bool, int, bool, string, bool, bool> configurationCallback)
         {

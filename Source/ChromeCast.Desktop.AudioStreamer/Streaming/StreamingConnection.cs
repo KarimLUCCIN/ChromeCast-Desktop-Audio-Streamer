@@ -2,39 +2,25 @@
 using System.Text;
 using System.Net.Sockets;
 using NAudio.Wave;
-using ChromeCast.Desktop.AudioStreamer.Streaming.Interfaces;
 
 namespace ChromeCast.Desktop.AudioStreamer.Streaming
 {
-    public class StreamingConnection : IStreamingConnection
+    public class StreamingConnection
     {
         private Socket Socket;
-        private IRiff riff;
         private bool isRiffHeaderSent;
-        private int reduceLagCounter = 0;
 
-        public StreamingConnection(IRiff riffIn)
+        public StreamingConnection()
         {
-            riff = riffIn;
             isRiffHeaderSent = false;
         }
 
-        public void SendData(ArraySegment<byte> dataToSend, WaveFormat format, int reduceLagThreshold)
+        public void SendData(ArraySegment<byte> dataToSend, WaveFormat format)
         {
-            if (reduceLagThreshold < 1000)
-            {
-                reduceLagCounter++;
-                if (reduceLagCounter > reduceLagThreshold)
-                {
-                    reduceLagCounter = 0;
-                    return;
-                }
-            }
-
             if (!isRiffHeaderSent)
             {
                 isRiffHeaderSent = true;
-                Send(new ArraySegment<byte>(riff.GetRiffHeader(format)));
+                Send(new ArraySegment<byte>(Riff.GetRiffHeader(format)));
             }
 
             Send(dataToSend);

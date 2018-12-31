@@ -4,26 +4,25 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using ChromeCast.Desktop.AudioStreamer.Application.Interfaces;
-using ChromeCast.Desktop.AudioStreamer.Communication.Interfaces;
+using ChromeCast.Desktop.AudioStreamer.Application;
 using ChromeCast.Desktop.AudioStreamer.ProtocolBuffer;
 
 namespace ChromeCast.Desktop.AudioStreamer.Communication
 {
-    public class DeviceConnection : IDeviceConnection
+    public class DeviceConnection
     {
         private Func<string> getHost;
         private Action<DeviceState, string> setDeviceState;
         private Action<CastMessage> onReceiveMessage;
-        private ILogger logger;
-        private IDeviceReceiveBuffer deviceReceiveBuffer;
+        private Logger logger;
+        private DeviceReceiveBuffer deviceReceiveBuffer;
         private const int bufferSize = 2048;
         private TcpClient tcpClient;
         private SslStream sslStream;
         private byte[] receiveBuffer;
         private DeviceConnectionState state;
 
-        public DeviceConnection(ILogger loggerIn, IDeviceReceiveBuffer deviceReceiveBufferIn)
+        public DeviceConnection(Logger loggerIn, DeviceReceiveBuffer deviceReceiveBufferIn)
         {
             logger = loggerIn;
             deviceReceiveBuffer = deviceReceiveBufferIn;

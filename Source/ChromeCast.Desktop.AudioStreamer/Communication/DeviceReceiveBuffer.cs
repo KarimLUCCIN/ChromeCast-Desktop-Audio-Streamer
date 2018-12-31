@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using ChromeCast.Desktop.AudioStreamer.ProtocolBuffer;
-using ChromeCast.Desktop.AudioStreamer.Communication.Interfaces;
 
 namespace ChromeCast.Desktop.AudioStreamer.Communication
 {
-    public class DeviceReceiveBuffer : IDeviceReceiveBuffer
+    public class DeviceReceiveBuffer
     {
         private Action<CastMessage> onReceiveMessage;
 

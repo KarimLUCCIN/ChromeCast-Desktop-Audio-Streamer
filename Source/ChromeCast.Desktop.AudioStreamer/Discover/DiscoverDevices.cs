@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Timers;
 using Rssdp;
-using ChromeCast.Desktop.AudioStreamer.Discover.Interfaces;
 using System.Linq;
 using Zeroconf;
 using System.Threading.Tasks;
@@ -10,15 +9,15 @@ using Newtonsoft.Json;
 
 namespace ChromeCast.Desktop.AudioStreamer.Discover
 {
-    public class DiscoverDevices : IDiscoverDevices
+    public class DiscoverDevices
     {
         public const int Interval = 2000;
         public const int MaxNumberOfTries = 15;
-        private IDiscoverServiceSSDP discoverServiceSSDP;
+        private DiscoverServiceSSDP discoverServiceSSDP;
         private Action<DiscoveredSsdpDevice, SsdpDevice> onDiscovered;
         private int numberDiscovered;
 
-        public DiscoverDevices(IDiscoverServiceSSDP discoverServiceSSDPIn)
+        public DiscoverDevices(DiscoverServiceSSDP discoverServiceSSDPIn)
         {
             discoverServiceSSDP = discoverServiceSSDPIn;
         }

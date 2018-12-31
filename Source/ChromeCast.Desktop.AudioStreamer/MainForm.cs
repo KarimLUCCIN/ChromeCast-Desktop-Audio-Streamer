@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using ChromeCast.Desktop.AudioStreamer.Application;
 using ChromeCast.Desktop.AudioStreamer.UserControls;
-using ChromeCast.Desktop.AudioStreamer.Application.Interfaces;
 using System.Threading.Tasks;
 using CSCore.CoreAudioAPI;
 using ChromeCast.Desktop.AudioStreamer.Classes;
@@ -12,26 +11,31 @@ using System.Linq;
 
 namespace ChromeCast.Desktop.AudioStreamer
 {
-    public partial class MainForm : Form, IMainForm
+    public partial class MainForm : Form
     {
-        private IApplicationLogic applicationLogic;
-        private IDevices devices;
-        private ILogger logger;
-
-        public MainForm(IApplicationLogic applicationLogicIn, IDevices devicesIn, ILogger loggerIn)
-        {
-            InitializeComponent();
-
-            applicationLogic = applicationLogicIn;
-            devices = devicesIn;
-            logger = loggerIn;
-            logger.SetCallback(Log);
-            devices.SetDependencies(this, applicationLogic);
-            applicationLogic.SetDependencies(this);
-        }
+        private ApplicationLogic applicationLogic;
+        private Devices devices;
+        private Logger logger;
 
         public MainForm()
         {
+            logger = new Logger();
+            applicationLogic = new ApplicationLogic(
+                devices = new Devices(logger), 
+                new Discover.DiscoverDevices(
+                    new Discover.DiscoverServiceSSDP()
+                ), 
+                new Streaming.LoopbackRecorder(), 
+                new Configuration(), 
+                new Streaming.StreamingRequestsListener(), 
+                new DeviceStatusTimer()
+            );
+
+            InitializeComponent();
+
+            logger.SetCallback(Log);
+            devices.SetDependencies(this, applicationLogic);
+            applicationLogic.SetDependencies(this);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -52,7 +56,7 @@ namespace ChromeCast.Desktop.AudioStreamer
             applicationLogic.CloseApplication();
         }
 
-        public void AddDevice(IDevice device)
+        public void AddDevice(Device device)
         {
             if (InvokeRequired)
             {

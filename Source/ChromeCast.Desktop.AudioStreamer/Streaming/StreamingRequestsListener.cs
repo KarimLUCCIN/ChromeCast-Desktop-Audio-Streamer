@@ -4,7 +4,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using ChromeCast.Desktop.AudioStreamer.Classes;
-using ChromeCast.Desktop.AudioStreamer.Streaming.Interfaces;
 
 namespace ChromeCast.Desktop.AudioStreamer.Streaming
 {
@@ -16,7 +15,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Streaming
         public StringBuilder receiveBuffer = new StringBuilder();
     }
 
-    public class StreamingRequestsListener : IStreamingRequestsListener
+    public class StreamingRequestsListener
     {
         public ManualResetEvent allDone = new ManualResetEvent(false);
         private Action<string, int> onListenCallback;

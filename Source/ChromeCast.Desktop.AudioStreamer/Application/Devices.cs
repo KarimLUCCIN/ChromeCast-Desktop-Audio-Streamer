@@ -9,17 +9,23 @@ using Microsoft.Practices.Unity;
 using ChromeCast.Desktop.AudioStreamer.Communication;
 using ChromeCast.Desktop.AudioStreamer.Classes;
 using System.Timers;
-using ChromeCast.Desktop.AudioStreamer.Application.Interfaces;
 
 namespace ChromeCast.Desktop.AudioStreamer.Application
 {
-    public class Devices : IDevices
+    public class Devices
     {
-        private List<IDevice> deviceList = new List<IDevice>();
+        private List<Device> deviceList = new List<Device>();
         private Action<Device> onAddDeviceCallback;
         private bool AutoStart;
-        private IMainForm mainForm;
-        private IApplicationLogic applicationLogic;
+        private MainForm mainForm;
+        private ApplicationLogic applicationLogic;
+        private Logger logger;
+        private string streamingUrl;
+
+        public Devices(Logger logger)
+        {
+            this.logger = logger;
+        }
 
         public void OnDeviceAvailable(DiscoveredSsdpDevice discoveredSsdpDevice, SsdpDevice ssdpDevice)
         {
@@ -33,7 +39,8 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             {
                 if (!deviceList.Any(d => d.GetUsn() != null && d.GetUsn().Equals(device.Usn)))
                 {
-                    var newDevice = DependencyFactory.Container.Resolve<Device>();
+                    var newDevice = new Device(new DeviceConnection(logger, new DeviceReceiveBuffer()), new DeviceCommunication(logger, new ChromeCastMessages()));
+                    newDevice.SetStreamingUrl(streamingUrl);
                     newDevice.SetDiscoveredDevices(device, fullDevice);
                     deviceList.Add(newDevice);
                     onAddDeviceCallback?.Invoke(newDevice);
@@ -88,6 +95,16 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             return playing;
         }
 
+        public void SetStreamingUrl(string streamingUrl)
+        {
+            this.streamingUrl = streamingUrl;
+
+            foreach (var device in deviceList)
+            {
+                device.SetStreamingUrl(streamingUrl);
+            }
+        }
+
         public void Start()
         {
             foreach (var device in deviceList)
@@ -106,11 +123,11 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             }
         }
 
-        public void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format, int reduceLagThreshold)
+        public void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format)
         {
             foreach (var device in deviceList)
             {
-                device.OnRecordingDataAvailable(dataToSend, format, reduceLagThreshold);
+                device.OnRecordingDataAvailable(dataToSend, format);
             }
         }
 
@@ -166,7 +183,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             ((Timer)sender).Stop();
         }
 
-        public void SetDependencies(MainForm mainFormIn, IApplicationLogic applicationLogicIn)
+        public void SetDependencies(MainForm mainFormIn, ApplicationLogic applicationLogicIn)
         {
             mainForm = mainFormIn;
             applicationLogic = applicationLogicIn;
