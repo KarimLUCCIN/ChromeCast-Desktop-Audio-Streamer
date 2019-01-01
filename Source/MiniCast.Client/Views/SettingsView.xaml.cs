@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MiniCast.Client
+namespace MiniCast.Client.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for SettingsView.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class SettingsView : UserControl
     {
-        public MainWindow()
+        public SettingsView()
         {
             InitializeComponent();
         }

@@ -1,4 +1,6 @@
 using GalaSoft.MvvmLight;
+using MahApps.Metro.Controls;
+using MahApps.Metro.IconPacks;
 
 namespace MiniCast.Client.ViewModel
 {
@@ -16,19 +18,73 @@ namespace MiniCast.Client.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
+        private HamburgerMenuItemCollection _menuItems;
+        private HamburgerMenuItemCollection _menuOptionItems;
+
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            this.CreateMenuItems();
+        }
+
+        public void CreateMenuItems()
+        {
+            MenuItems = new HamburgerMenuItemCollection
+            {
+                new HamburgerMenuIconItem()
+                {
+                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Home},
+                    Label = "Home",
+                    ToolTip = "The Home view.",
+                    Tag = new HomeViewModel()
+                },
+                new HamburgerMenuIconItem()
+                {
+                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Cast},
+                    Label = "Chromecast",
+                    ToolTip = "Chromecast Settings.",
+                    Tag = new ChromecastViewModel()
+                },
+                new HamburgerMenuIconItem()
+                {
+                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.LightbulbOn},
+                    Label = "Hue",
+                    ToolTip = "Philips Hue.",
+                    Tag = new HueViewModel()
+                }
+            };
+
+            MenuOptionItems = new HamburgerMenuItemCollection
+            {
+                new HamburgerMenuIconItem()
+                {
+                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Settings},
+                    Label = "Settings",
+                    ToolTip = "General Settings.",
+                    Tag = new SettingsViewModel()
+                }
+            };
+        }
+
+        public HamburgerMenuItemCollection MenuItems
+        {
+            get { return _menuItems; }
+            set
+            {
+                if (Equals(value, _menuItems)) return;
+                _menuItems = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public HamburgerMenuItemCollection MenuOptionItems
+        {
+            get { return _menuOptionItems; }
+            set
+            {
+                if (Equals(value, _menuOptionItems)) return;
+                _menuOptionItems = value;
+                RaisePropertyChanged();
+            }
         }
     }
 }
