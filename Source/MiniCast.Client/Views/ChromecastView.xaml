@@ -4,9 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MiniCast.Client.Views"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:viewModelChromecast="clr-namespace:MiniCast.Client.ViewModel.Chromecast"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Button HorizontalAlignment="Center" VerticalAlignment="Center">Devices Stuff</Button>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid DataContext="{Binding Chromecast, Source={StaticResource Locator}}" Margin="10">
+        <ListBox x:Name="meeh" DataContext="{Binding DevicesEnumeratorViewModel}"
+            Visibility="{Binding IsReady, Converter={StaticResource BooleanToVisibilityConverter}}"
+            ItemsSource="{Binding KnownDevices}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <controls:Tile Title="{Binding DeviceInfo.FriendlyName}" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Width="256">
+                        <Grid Width="256">
+                            <Image HorizontalAlignment="Right" Source="/MiniCast.Client;component/ChromeCast.ico" Opacity="0.2"/>
+                            
+                            <StackPanel Orientation="Vertical" Margin="10">
+                                <TextBlock Text="{Binding Host}"/>
+                                <TextBlock Text="{Binding DeviceInfo.Manufacturer}"/>
+                                <TextBlock Text="{Binding DeviceInfo.ModelName}"/>
+                            </StackPanel>
+                        </Grid>
+                    </controls:Tile>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <controls:ProgressRing IsActive="{Binding DevicesEnumeratorViewModel.IsBusy}"/>
     </Grid>
 </UserControl>

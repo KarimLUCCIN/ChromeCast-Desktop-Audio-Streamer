@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
 using MahApps.Metro.Controls;
 using MahApps.Metro.IconPacks;
+using MiniCast.Client.ViewModel.Chromecast;
 
 namespace MiniCast.Client.ViewModel
 {
@@ -35,21 +36,21 @@ namespace MiniCast.Client.ViewModel
                     Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Home},
                     Label = "Home",
                     ToolTip = "The Home view.",
-                    Tag = new HomeViewModel()
+                    Tag = ViewModelLocator.Instance.Home
                 },
                 new HamburgerMenuIconItem()
                 {
                     Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Cast},
                     Label = "Chromecast",
                     ToolTip = "Chromecast Settings.",
-                    Tag = new ChromecastViewModel()
+                    Tag =  ViewModelLocator.Instance.Chromecast
                 },
                 new HamburgerMenuIconItem()
                 {
                     Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.LightbulbOn},
                     Label = "Hue",
                     ToolTip = "Philips Hue.",
-                    Tag = new HueViewModel()
+                    Tag =  ViewModelLocator.Instance.Hue
                 }
             };
 
@@ -60,7 +61,7 @@ namespace MiniCast.Client.ViewModel
                     Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Settings},
                     Label = "Settings",
                     ToolTip = "General Settings.",
-                    Tag = new SettingsViewModel()
+                    Tag = ViewModelLocator.Instance.Settings
                 }
             };
         }

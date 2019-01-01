@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:MiniCast.Client"
         xmlns:views="clr-namespace:MiniCast.Client.Views"
         xmlns:viewModel="clr-namespace:MiniCast.Client.ViewModel"
+        xmlns:viewModelChromecast="clr-namespace:MiniCast.Client.ViewModel.Chromecast"
         xmlns:core="clr-namespace:MiniCast.Client.Core"
         mc:Ignorable="d"
         Title="MiniCast" Height="450" Width="800">
@@ -45,7 +46,7 @@
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                 <views:HomeView DataContext="{Binding}" />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:ChromecastViewModel}">
+            <DataTemplate DataType="{x:Type viewModelChromecast:ChromecastViewModel}">
                 <views:ChromecastView DataContext="{Binding}" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">

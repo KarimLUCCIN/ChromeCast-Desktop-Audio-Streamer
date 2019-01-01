@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniCast.Client.ViewModel
 {
-    class HomeViewModel
+    public class HomeViewModel
     {
     }
 }

@@ -24,11 +24,14 @@ namespace MiniCast.Client.ViewModel
     /// </summary>
     public class ViewModelLocator
     {
+        public static ViewModelLocator Instance { get; private set; }
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
         /// </summary>
         public ViewModelLocator()
         {
+            Instance = this;
+
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             ////if (ViewModelBase.IsInDesignModeStatic)
@@ -43,16 +46,19 @@ namespace MiniCast.Client.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<Chromecast.ChromecastViewModel>();
+            SimpleIoc.Default.Register<HomeViewModel>();
+            SimpleIoc.Default.Register<HueViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
         }
 
-        public MainViewModel Main
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
-        }
-        
+        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public Chromecast.ChromecastViewModel Chromecast => ServiceLocator.Current.GetInstance<Chromecast.ChromecastViewModel>();
+
+        public HomeViewModel Home => ServiceLocator.Current.GetInstance<HomeViewModel>();
+        public HueViewModel Hue => ServiceLocator.Current.GetInstance<HueViewModel>();
+        public SettingsViewModel Settings => ServiceLocator.Current.GetInstance<SettingsViewModel>();
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
