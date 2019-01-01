@@ -237,6 +237,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\DeviceStateToStringConverter.cs" />
     <Compile Include="Core\SelectedItemToContentConverter.cs" />
     <Compile Include="ViewModel\Chromecast\ChromecastViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\DeviceViewModel.cs" />
@@ -248,6 +249,9 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="Views\ChromecastActionsView.xaml.cs">
+      <DependentUpon>ChromecastActionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ChromecastView.xaml.cs">
       <DependentUpon>ChromecastView.xaml</DependentUpon>
     </Compile>
@@ -272,6 +276,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ChromecastActionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ChromecastView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -329,7 +337,11 @@
   <ItemGroup>
     <Resource Include="ChromeCast.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\baseline_pause_circle_filled_black_18dp.png" />
+    <Resource Include="Resources\baseline_play_circle_filled_black_18dp.png" />
+    <Resource Include="Resources\baseline_stop_black_18dp.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\baseline_room_service_black_18dp.png" />
   </ItemGroup>

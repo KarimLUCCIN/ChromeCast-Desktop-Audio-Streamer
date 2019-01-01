@@ -23,7 +23,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <controls:Tile Title="{Binding DeviceInfo.FriendlyName}" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Width="256">
-                        <Button Width="256" HorizontalContentAlignment="Stretch">
+                        <Button Width="256" HorizontalContentAlignment="Stretch" Command="{Binding Chromecast.SelectDeviceCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
                             <Grid>
                                 <Image HorizontalAlignment="Right" Source="/MiniCast.Client;component/ChromeCast.ico" Opacity="0.2"/>
 

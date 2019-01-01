@@ -59,6 +59,11 @@
 
         </Grid.Resources>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+
         <controls:HamburgerMenu x:Name="HamburgerMenuControl"
                            DisplayMode="CompactInline"
                            IsPaneOpen="False"
@@ -83,5 +88,13 @@
             </controls:HamburgerMenu.Content>
 
         </controls:HamburgerMenu>
+
+        <Grid Grid.Column="1">
+            <Grid.Background>
+                <SolidColorBrush Color="{StaticResource Gray8}"/>
+            </Grid.Background>
+
+            <views:ChromecastActionsView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+        </Grid>
     </Grid>
 </controls:MetroWindow>
