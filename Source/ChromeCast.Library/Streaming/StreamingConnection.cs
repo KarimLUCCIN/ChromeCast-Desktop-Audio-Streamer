@@ -59,9 +59,12 @@ namespace ChromeCast.Library.Streaming
             return httpStartStreamingReply.ToString();
         }
 
-        public bool IsConnected()
+        public bool IsConnected
         {
-            return Socket != null && Socket.Connected;
+            get
+            {
+                return Socket != null && Socket.Connected;
+            }
         }
 
         public string GetRemoteEndPoint()

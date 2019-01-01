@@ -18,7 +18,6 @@ namespace ChromeCast.Library.Communication
         private Func<string> getHost;
         private Func<DeviceState> getDeviceState;
         private Logger logger;
-        private ChromeCastMessages chromeCastMessages;
         private string chromeCastDestination;
         private string chromeCastSource;
         private string chromeCastApplicationSessionNr;
@@ -27,10 +26,9 @@ namespace ChromeCast.Library.Communication
         private VolumeSetItem lastVolumeSetItem;
         private VolumeSetItem nextVolumeSetItem;
 
-        public DeviceCommunication(Logger loggerIn, ChromeCastMessages chromeCastMessagesIn)
+        public DeviceCommunication(Logger loggerIn)
         {
             logger = loggerIn;
-            chromeCastMessages = chromeCastMessagesIn;
             chromeCastDestination = string.Empty;
             chromeCastSource = string.Format("client-8{0}", new Random().Next(10000, 99999));
             requestId = 0;
@@ -46,24 +44,24 @@ namespace ChromeCast.Library.Communication
 
         public void Connect(string sourceId = null, string destinationId = null)
         {
-            SendMessage(chromeCastMessages.GetConnectMessage(sourceId, destinationId));
+            SendMessage(ChromeCastMessages.GetConnectMessage(sourceId, destinationId));
         }
 
         public void Launch()
         {
-            SendMessage(chromeCastMessages.GetLaunchMessage(GetNextRequestId()));
+            SendMessage(ChromeCastMessages.GetLaunchMessage(GetNextRequestId()));
         }
 
         public void LoadMedia(string streamingUrl)
         {
             setDeviceState?.Invoke(DeviceState.LoadingMedia, null);
-            SendMessage(chromeCastMessages.GetLoadMessage(streamingUrl, chromeCastSource, chromeCastDestination));
+            SendMessage(ChromeCastMessages.GetLoadMessage(streamingUrl, chromeCastSource, chromeCastDestination));
         }
 
         public void PauseMedia()
         {
             setDeviceState?.Invoke(DeviceState.Paused, null);
-            SendMessage(chromeCastMessages.GetPauseMessage(chromeCastApplicationSessionNr, chromeCastMediaSessionId, GetNextRequestId(), chromeCastSource, chromeCastDestination));
+            SendMessage(ChromeCastMessages.GetPauseMessage(chromeCastApplicationSessionNr, chromeCastMediaSessionId, GetNextRequestId(), chromeCastSource, chromeCastDestination));
         }
 
         public void VolumeSet(Volume volumeSetting)
@@ -83,7 +81,7 @@ namespace ChromeCast.Library.Communication
                 lastVolumeSetItem = nextVolumeSetItem;
                 lastVolumeSetItem.RequestId = GetNextRequestId();
                 lastVolumeSetItem.SendAt = DateTime.Now;
-                SendMessage(chromeCastMessages.GetVolumeSetMessage(lastVolumeSetItem.Setting, lastVolumeSetItem.RequestId));
+                SendMessage(ChromeCastMessages.GetVolumeSetMessage(lastVolumeSetItem.Setting, lastVolumeSetItem.RequestId));
                 nextVolumeSetItem = null;
             }
         }
@@ -91,27 +89,27 @@ namespace ChromeCast.Library.Communication
         public void VolumeMute(bool muted)
         {
             if (isConnected())
-                SendMessage(chromeCastMessages.GetVolumeMuteMessage(muted, GetNextRequestId()));
+                SendMessage(ChromeCastMessages.GetVolumeMuteMessage(muted, GetNextRequestId()));
         }
 
         public void Pong()
         {
-            SendMessage(chromeCastMessages.GetPongMessage());
+            SendMessage(ChromeCastMessages.GetPongMessage());
         }
 
         public void GetReceiverStatus()
         {
-            SendMessage(chromeCastMessages.GetReceiverStatusMessage(GetNextRequestId()));
+            SendMessage(ChromeCastMessages.GetReceiverStatusMessage(GetNextRequestId()));
         }
 
         public void GetMediaStatus()
         {
-            SendMessage(chromeCastMessages.GetMediaStatusMessage(GetNextRequestId(), chromeCastSource, chromeCastDestination));
+            SendMessage(ChromeCastMessages.GetMediaStatusMessage(GetNextRequestId(), chromeCastSource, chromeCastDestination));
         }
 
         public void Stop()
         {
-            SendMessage(chromeCastMessages.GetStopMessage(chromeCastApplicationSessionNr, chromeCastMediaSessionId, GetNextRequestId(), chromeCastSource, chromeCastDestination));
+            SendMessage(ChromeCastMessages.GetStopMessage(chromeCastApplicationSessionNr, chromeCastMediaSessionId, GetNextRequestId(), chromeCastSource, chromeCastDestination));
         }
 
         public int GetNextRequestId()
@@ -121,7 +119,7 @@ namespace ChromeCast.Library.Communication
 
         public void SendMessage(CastMessage castMessage)
         {
-            var byteMessage = chromeCastMessages.MessageToByteArray(castMessage);
+            var byteMessage = ChromeCastMessages.MessageToByteArray(castMessage);
             sendMessage?.Invoke(byteMessage);
 
             logger.Log(string.Format("out [{2}][{0}]: {1}", getHost?.Invoke(), castMessage.PayloadUtf8, DateTime.Now.ToLongTimeString()));

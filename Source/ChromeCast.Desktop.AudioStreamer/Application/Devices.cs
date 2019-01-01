@@ -38,7 +38,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             {
                 if (!deviceList.Any(d => d.GetUsn() != null && d.GetUsn().Equals(device.Usn)))
                 {
-                    var newDevice = new Device(new DeviceConnection(logger, new DeviceReceiveBuffer()), new DeviceCommunication(logger, new ChromeCastMessages()));
+                    var newDevice = new Device(new DeviceConnection(logger, new DeviceReceiveBuffer()), new DeviceCommunication(logger));
                     newDevice.SetStreamingUrl(streamingUrl);
                     newDevice.SetDiscoveredDevices(device, fullDevice);
                     deviceList.Add(newDevice);

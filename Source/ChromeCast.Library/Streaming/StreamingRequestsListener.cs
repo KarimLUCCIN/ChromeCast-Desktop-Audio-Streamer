@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using ChromeCast.Library.Classes;
 
 namespace ChromeCast.Library.Streaming
@@ -18,14 +20,12 @@ namespace ChromeCast.Library.Streaming
     public class StreamingRequestsListener
     {
         public ManualResetEvent allDone = new ManualResetEvent(false);
-        private Action<string, int> onListenCallback;
-        private Action<Socket, string> onConnectCallback;
+        public event Action<string, int> Listening;
+        public event Action<Socket, string> Connected;
         private Socket listener;
 
-        public void StartListening(IPAddress ipAddress, Action<string, int> onListenCallbackIn, Action<Socket, string> onConnectCallbackIn)
+        public IPEndPoint StartListening(IPAddress ipAddress)
         {
-            onListenCallback = onListenCallbackIn;
-            onConnectCallback = onConnectCallbackIn;
             var localEndPoint = new IPEndPoint(ipAddress, 0);
             listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -33,18 +33,32 @@ namespace ChromeCast.Library.Streaming
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
-                onListenCallback?.Invoke(((IPEndPoint)listener.LocalEndPoint).Address.ToString(), ((IPEndPoint)listener.LocalEndPoint).Port);
+                Listening?.Invoke(((IPEndPoint)listener.LocalEndPoint).Address.ToString(), ((IPEndPoint)listener.LocalEndPoint).Port);
 
-                while (true)
+                var result = ((IPEndPoint)listener.LocalEndPoint);
+                Task.Run(() =>
                 {
-                    allDone.Reset();
-                    listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
-                    allDone.WaitOne();
-                }
+                    try
+                    {
+                        while (true)
+                        {
+                            allDone.Reset();
+                            listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+                            allDone.WaitOne();
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                    }
+                });
+
+                return result;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Debug.WriteLine(ex.ToString());
+                return null;
             }
         }
 
@@ -89,7 +103,7 @@ namespace ChromeCast.Library.Streaming
                 state.receiveBuffer.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
                 if (state.receiveBuffer.ToString().IndexOf("\r\n\r\n") >= 0)
                 {
-                    onConnectCallback?.Invoke(handlerSocket, state.receiveBuffer.ToString());
+                    Connected?.Invoke(handlerSocket, state.receiveBuffer.ToString());
                 }
                 else
                 {

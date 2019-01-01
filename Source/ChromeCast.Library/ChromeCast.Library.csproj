@@ -89,6 +89,8 @@
     <Compile Include="Communication\DeviceState.cs" />
     <Compile Include="Discover\DiscoverDevices.cs" />
     <Compile Include="Discover\DiscoverServiceSSDP.cs" />
+    <Compile Include="Networking\EndpointCommunication.cs" />
+    <Compile Include="Networking\EndpointConnection.cs" />
     <Compile Include="Platform\DeviceStatusTimer.cs" />
     <Compile Include="Platform\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,10 +98,12 @@
     <Compile Include="Streaming\Riff.cs" />
     <Compile Include="Streaming\StreamingConnection.cs" />
     <Compile Include="Streaming\StreamingRequestsListener.cs" />
+    <Compile Include="TaskExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

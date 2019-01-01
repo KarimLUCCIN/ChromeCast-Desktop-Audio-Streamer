@@ -33,6 +33,7 @@ namespace MiniCast.Client.ViewModel.Hue
             }
 
             IsBusy = true;
+            ScanForDevicesCommand.RaiseCanExecuteChanged();
             try
             {
                 var devices = await HueEndpointsEnumerator.EnumerateDevices();
@@ -48,6 +49,7 @@ namespace MiniCast.Client.ViewModel.Hue
             finally
             {
                 IsBusy = false;
+                ScanForDevicesCommand.RaiseCanExecuteChanged();
             }
         }
     }

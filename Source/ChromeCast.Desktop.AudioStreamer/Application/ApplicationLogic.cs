@@ -41,12 +41,15 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
             configuration = configurationIn;
             streamingRequestListener = streamingRequestListenerIn;
             deviceStatusTimer = deviceStatusTimerIn;
+
+            streamingRequestListener.Listening += OnStreamingRequestsListen;
+            streamingRequestListener.Connected += OnStreamingRequestConnect;
         }
 
         public void Start()
         {
             var ipAddress = Network.GetIp4Address();
-            Task.Run(() => { streamingRequestListener.StartListening(ipAddress, OnStreamingRequestsListen, OnStreamingRequestConnect); });
+            Task.Run(() => { streamingRequestListener.StartListening(ipAddress); });
             AddNotifyIcon();
             configuration.Load(SetConfiguration);
             ScanForDevices();
@@ -206,7 +209,7 @@ namespace ChromeCast.Desktop.AudioStreamer.Application
         {
             playingOnIpChange = devices.Stop();
             streamingRequestListener.StopListening();
-            await Task.Run(() => { streamingRequestListener.StartListening(ipAddress, OnStreamingRequestsListen, OnStreamingRequestConnect); });
+            await Task.Run(() => { streamingRequestListener.StartListening(ipAddress); });
             if (playingOnIpChange)
             {
                 await Task.Delay(2500);

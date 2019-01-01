@@ -36,6 +36,7 @@ namespace MiniCast.Client.ViewModel.Chromecast
             }
 
             IsBusy = true;
+            ScanForDevicesCommand.RaiseCanExecuteChanged();
             try
             {
                 var discoveredDevices = new List<(DiscoveredSsdpDevice discoveredDevice, SsdpDevice device)>();
@@ -60,6 +61,7 @@ namespace MiniCast.Client.ViewModel.Chromecast
             finally
             {
                 IsBusy = false;
+                ScanForDevicesCommand.RaiseCanExecuteChanged();
             }
         }
     }

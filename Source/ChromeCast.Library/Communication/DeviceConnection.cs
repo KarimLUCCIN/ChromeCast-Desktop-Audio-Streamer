@@ -26,7 +26,7 @@ namespace ChromeCast.Library.Communication
         {
             logger = loggerIn;
             deviceReceiveBuffer = deviceReceiveBufferIn;
-            deviceReceiveBuffer.SetCallback(OnReceiveMessage);
+            deviceReceiveBuffer.MessageReceived += OnReceiveMessage;
         }
 
         private void Connect()
@@ -108,7 +108,7 @@ namespace ChromeCast.Library.Communication
             }
             if (byteCount > 0)
             {
-                deviceReceiveBuffer.OnReceive(receiveBuffer.Take(byteCount).ToArray());
+                deviceReceiveBuffer.OnReceive(new ArraySegment<byte>(receiveBuffer, 0, byteCount));
             }
             StartReceive();
         }

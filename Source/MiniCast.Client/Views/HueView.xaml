@@ -12,6 +12,13 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid DataContext="{Binding Hue, Source={StaticResource Locator}}" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="40" IsEnabled="{Binding DevicesEnumeratorViewModel.IsReady}" Command="{Binding DevicesEnumeratorViewModel.ScanForDevicesCommand}">
+            <Image Source="/MiniCast.Client;component/Resources/baseline_refresh_black_18dp.png"/>
+        </Button>
         <ListBox DataContext="{Binding DevicesEnumeratorViewModel}"
             Visibility="{Binding IsReady, Converter={StaticResource BooleanToVisibilityConverter}}"
             ItemsSource="{Binding KnownDevices}">

@@ -1,31 +1,32 @@
 ﻿using ChromeCast.Desktop.AudioStreamer.ProtocolBuffer;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ChromeCast.Library.Communication
 {
     public class DeviceReceiveBuffer
     {
-        private Action<CastMessage> onReceiveMessage;
+        public Action<CastMessage> MessageReceived;
 
-        public void OnReceive(byte[] data)
+        public void OnReceive(ArraySegment<byte> data)
         {
             ParseMessages(data);
         }
 
-        private void ParseMessages(byte[] serverMessage)
+        private void ParseMessages(ArraySegment<byte> serverMessage)
         {
             int offset = 0;
 
-            while (serverMessage.Length - offset >= 4)
+            while (serverMessage.Count - offset >= 4)
             {
                 var messageSize = BitConverter.ToInt32(serverMessage.Skip(offset).Take(4).Reverse().ToArray(), 0);
                 if (messageSize == 0)
                     break;
 
-                if (serverMessage.Length >= 4 + messageSize)
+                if (serverMessage.Count >= 4 + messageSize)
                 {
-                    var message = SubArray(serverMessage, 4, messageSize);
+                    var message = new ArraySegment<byte>(serverMessage.Array, serverMessage.Offset + 4, messageSize);
                     ProcessMessage(message);
 
                     offset = offset + 4 + messageSize;
@@ -33,22 +34,13 @@ namespace ChromeCast.Library.Communication
             }
         }
 
-        private void ProcessMessage(byte[] message)
+        private void ProcessMessage(ArraySegment<byte> message)
         {
-            var castMessage = CastMessage.ParseFrom(message);
-            onReceiveMessage?.Invoke(castMessage);
-        }
-
-        private T[] SubArray<T>(T[] data, int index, int length)
-        {
-            T[] result = new T[length];
-            Array.Copy(data, index, result, 0, length);
-            return result;
-        }
-
-        public void SetCallback(Action<CastMessage> onReceiveMessageIn)
-        {
-            onReceiveMessage = onReceiveMessageIn;
+            using (var ms = new MemoryStream(message.Array, message.Offset, message.Count))
+            {
+                var castMessage = CastMessage.ParseFrom(ms);
+                MessageReceived?.Invoke(castMessage);
+            }
         }
     }
 }

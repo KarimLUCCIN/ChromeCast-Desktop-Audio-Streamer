@@ -8,14 +8,14 @@ using Newtonsoft.Json;
 
 namespace ChromeCast.Library.Communication
 {
-    public class ChromeCastMessages
+    public static class ChromeCastMessages
     {
         private const string namespaceConnect = "urn:x-cast:com.google.cast.tp.connection";
         private const string namespaceHeartbeat = "urn:x-cast:com.google.cast.tp.heartbeat";
         private const string namespaceReceiver = "urn:x-cast:com.google.cast.receiver";
         private const string namespaceMedia = "urn:x-cast:com.google.cast.media";
 
-        public CastMessage GetVolumeSetMessage(Volume volume, int requestId, string sourceId = null, string destinationId = null)
+        public static CastMessage GetVolumeSetMessage(Volume volume, int requestId, string sourceId = null, string destinationId = null)
         {
             var volumeMessage = new MessageVolume
             {
@@ -29,7 +29,7 @@ namespace ChromeCast.Library.Communication
             return GetCastMessage(volumeMessage, namespaceReceiver, sourceId, destinationId);
         }
 
-        public CastMessage GetVolumeMuteMessage(bool muted, int requestId, string sourceId = null, string destinationId = null)
+        public static CastMessage GetVolumeMuteMessage(bool muted, int requestId, string sourceId = null, string destinationId = null)
         {
             var volumeMessage = new MessageVolumeMute
             {
@@ -43,18 +43,18 @@ namespace ChromeCast.Library.Communication
             return GetCastMessage(volumeMessage, namespaceReceiver, sourceId, destinationId);
         }
 
-        public CastMessage GetConnectMessage(string sourceId = null, string destinationId = null)
+        public static CastMessage GetConnectMessage(string sourceId = null, string destinationId = null)
         {
             return GetCastMessage(new PayloadMessageBase { type = "CONNECT" }, namespaceConnect, sourceId, destinationId);
         }
 
-        public CastMessage GetLaunchMessage(int requestId)
+        public static CastMessage GetLaunchMessage(int requestId)
         {
             var message = new MessageLaunch { type = "LAUNCH", appId = "CC1AD845", requestId = requestId };
             return GetCastMessage(message, namespaceReceiver);
         }
 
-        public CastMessage GetLoadMessage(string streamingUrl, string sourceId, string destinationId)
+        public static CastMessage GetLoadMessage(string streamingUrl, string sourceId, string destinationId)
         {
             var message = new MessageLoad
             {
@@ -72,7 +72,7 @@ namespace ChromeCast.Library.Communication
                     {
                         type = 0,
                         metadataType = 0,
-                        title = "Desktop Stream",
+                        title = "MiniCast",
                         images = new List<Image>()
                     },
                 },
@@ -81,37 +81,37 @@ namespace ChromeCast.Library.Communication
             return GetCastMessage(message, namespaceMedia, sourceId, destinationId);
         }
 
-        public CastMessage GetPauseMessage(string sessionId, int mediaSessionId, int requestId, string sourceId, string destinationId)
+        public static CastMessage GetPauseMessage(string sessionId, int mediaSessionId, int requestId, string sourceId, string destinationId)
         {
             return GetCastMessage(new MessagePause { type = "PAUSE", sessionId = sessionId, mediaSessionId = mediaSessionId, requestId = requestId }, namespaceMedia, sourceId, destinationId);
         }
 
-        public CastMessage GetPingMessage()
+        public static CastMessage GetPingMessage()
         {
             return GetCastMessage(new PayloadMessageBase { type = "PING" }, namespaceHeartbeat);
         }
 
-        public CastMessage GetPongMessage()
+        public static CastMessage GetPongMessage()
         {
             return GetCastMessage(new PayloadMessageBase { type = "PONG" }, namespaceHeartbeat);
         }
 
-        public CastMessage GetReceiverStatusMessage(int requestId)
+        public static CastMessage GetReceiverStatusMessage(int requestId)
         {
             return GetCastMessage(new MessageStatus { type = "GET_STATUS", requestId = requestId }, namespaceReceiver);
         }
 
-        public CastMessage GetMediaStatusMessage(int requestId, string sourceId, string destinationId)
+        public static CastMessage GetMediaStatusMessage(int requestId, string sourceId, string destinationId)
         {
             return GetCastMessage(new MessageStatus { type = "GET_STATUS", requestId = requestId }, namespaceMedia, sourceId, destinationId);
         }
 
-        public CastMessage GetStopMessage(string sessionId, int mediaSessionId, int requestId, string sourceId, string destinationId)
+        public static CastMessage GetStopMessage(string sessionId, int mediaSessionId, int requestId, string sourceId, string destinationId)
         {
             return GetCastMessage(new MessagePause { type = "STOP", sessionId = sessionId, mediaSessionId = mediaSessionId, requestId = requestId }, namespaceMedia, sourceId, destinationId);
         }
 
-        public CastMessage GetCastMessage(PayloadMessageBase message, string msgNamespace, string sourceId = null, string destinationId = null)
+        public static CastMessage GetCastMessage(PayloadMessageBase message, string msgNamespace, string sourceId = null, string destinationId = null)
         {
             if (string.IsNullOrWhiteSpace(sourceId)) sourceId = "sender-0";
             if (string.IsNullOrWhiteSpace(destinationId)) destinationId = "receiver-0";
@@ -128,7 +128,7 @@ namespace ChromeCast.Library.Communication
             }.Build();
         }
 
-        public byte[] MessageToByteArray(CastMessage message)
+        public static byte[] MessageToByteArray(CastMessage message)
         {
             var messageStream = new MemoryStream();
             message.WriteTo(messageStream);
