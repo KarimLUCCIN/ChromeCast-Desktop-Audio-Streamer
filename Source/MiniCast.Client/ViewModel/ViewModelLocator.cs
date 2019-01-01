@@ -15,6 +15,8 @@
 using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using MiniCast.Client.ViewModel.Chromecast;
+using MiniCast.Client.ViewModel.Hue;
 
 namespace MiniCast.Client.ViewModel
 {
@@ -46,14 +48,14 @@ namespace MiniCast.Client.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<Chromecast.ChromecastViewModel>();
+            SimpleIoc.Default.Register<ChromecastViewModel>();
             SimpleIoc.Default.Register<HomeViewModel>();
             SimpleIoc.Default.Register<HueViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
         }
 
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
-        public Chromecast.ChromecastViewModel Chromecast => ServiceLocator.Current.GetInstance<Chromecast.ChromecastViewModel>();
+        public Chromecast.ChromecastViewModel Chromecast => ServiceLocator.Current.GetInstance<ChromecastViewModel>();
 
         public HomeViewModel Home => ServiceLocator.Current.GetInstance<HomeViewModel>();
         public HueViewModel Hue => ServiceLocator.Current.GetInstance<HueViewModel>();

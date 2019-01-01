@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid DataContext="{Binding Chromecast, Source={StaticResource Locator}}" Margin="10">
-        <ListBox x:Name="meeh" DataContext="{Binding DevicesEnumeratorViewModel}"
+        <ListBox DataContext="{Binding DevicesEnumeratorViewModel}"
             Visibility="{Binding IsReady, Converter={StaticResource BooleanToVisibilityConverter}}"
             ItemsSource="{Binding KnownDevices}">
             <ListBox.ItemsPanel>

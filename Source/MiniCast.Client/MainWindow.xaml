@@ -8,6 +8,7 @@
         xmlns:views="clr-namespace:MiniCast.Client.Views"
         xmlns:viewModel="clr-namespace:MiniCast.Client.ViewModel"
         xmlns:viewModelChromecast="clr-namespace:MiniCast.Client.ViewModel.Chromecast"
+        xmlns:viewModelHue="clr-namespace:MiniCast.Client.ViewModel.Hue"
         xmlns:core="clr-namespace:MiniCast.Client.Core"
         mc:Ignorable="d"
         Title="MiniCast" Height="450" Width="800">
@@ -52,7 +53,7 @@
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <views:SettingsView DataContext="{Binding}" />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:HueViewModel}">
+            <DataTemplate DataType="{x:Type viewModelHue:HueViewModel}">
                 <views:HueView DataContext="{Binding}" />
             </DataTemplate>
 
