@@ -23,15 +23,17 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <controls:Tile Title="{Binding DeviceInfo.FriendlyName}" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Width="256">
-                        <Grid Width="256">
-                            <Image HorizontalAlignment="Right" Source="/MiniCast.Client;component/ChromeCast.ico" Opacity="0.2"/>
-                            
-                            <StackPanel Orientation="Vertical" Margin="10">
-                                <TextBlock Text="{Binding Host}"/>
-                                <TextBlock Text="{Binding DeviceInfo.Manufacturer}"/>
-                                <TextBlock Text="{Binding DeviceInfo.ModelName}"/>
-                            </StackPanel>
-                        </Grid>
+                        <Button Width="256" HorizontalContentAlignment="Stretch">
+                            <Grid>
+                                <Image HorizontalAlignment="Right" Source="/MiniCast.Client;component/ChromeCast.ico" Opacity="0.2"/>
+
+                                <StackPanel Orientation="Vertical" Margin="10">
+                                    <TextBlock Text="{Binding Host}"/>
+                                    <TextBlock Text="{Binding DeviceInfo.Manufacturer}"/>
+                                    <TextBlock Text="{Binding DeviceInfo.ModelName}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
                     </controls:Tile>
                 </DataTemplate>
             </ListBox.ItemTemplate>
