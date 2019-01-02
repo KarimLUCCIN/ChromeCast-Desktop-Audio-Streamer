@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acr.Settings;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,9 @@ namespace MiniCast.Client
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Acr.Settings.CrossSettings.Current = new AppConfigSettingsImpl("MiniCast.Config");
+        }
     }
 }

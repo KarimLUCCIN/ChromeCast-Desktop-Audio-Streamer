@@ -1,17 +1,20 @@
-﻿using Q42.HueApi.Models.Bridge;
+﻿using Q42.HueApi;
+using Q42.HueApi.Models.Bridge;
 
 namespace MiniCast.Hue
 {
     public class HueEndpoint
     {
-        private LocatedBridge endpoint;
+        public string Id => Endpoint.BridgeId;
+        public string Address => Endpoint.IpAddress;
 
-        public string Id => endpoint.BridgeId;
-        public string Address => endpoint.IpAddress;
+        public LocatedBridge Endpoint { get; private set; }
+        public LocalHueClient Client { get; private set; }
 
         public HueEndpoint(LocatedBridge endpoint)
         {
-            this.endpoint = endpoint ?? throw new System.ArgumentNullException(nameof(endpoint));
+            Endpoint = endpoint ?? throw new System.ArgumentNullException(nameof(endpoint));
+            Client = new LocalHueClient(Endpoint.IpAddress);
         }
     }
 }
