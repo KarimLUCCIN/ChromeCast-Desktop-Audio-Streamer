@@ -25,6 +25,16 @@ namespace MiniCast.Client.ViewModel.Hue
             ScanForDevicesCommand = new RelayCommand(ScanForDevices, () => !IsBusy);
         }
 
+        public override void Cleanup()
+        {
+            foreach (var device in KnownDevices)
+            {
+                device.Cleanup();
+            }
+
+            base.Cleanup();
+        }
+
         private async void ScanForDevices()
         {
             if (IsBusy)
@@ -37,7 +47,7 @@ namespace MiniCast.Client.ViewModel.Hue
             try
             {
                 var devices = await HueEndpointsEnumerator.EnumerateDevices();
-                foreach(var deviceInfo in devices)
+                foreach (var deviceInfo in devices)
                 {
                     var existing = KnownDevices.FirstOrDefault(d => d.Id == deviceInfo.Id);
                     if (existing == null)

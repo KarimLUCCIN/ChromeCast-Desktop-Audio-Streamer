@@ -16,5 +16,12 @@ namespace MiniCast.Client.ViewModel.Hue
         {
             DevicesEnumeratorViewModel.ScanForDevicesCommand.Execute(null);
         }
+
+        public override void Cleanup()
+        {
+            DevicesEnumeratorViewModel.Cleanup();
+
+            base.Cleanup();
+        }
     }
 }
