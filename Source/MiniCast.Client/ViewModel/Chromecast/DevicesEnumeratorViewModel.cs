@@ -38,7 +38,7 @@ namespace MiniCast.Client.ViewModel.Chromecast
             base.Cleanup();
         }
 
-        private async void ScanForDevices()
+        private void ScanForDevices()
         {
             if (IsBusy)
             {
@@ -49,24 +49,14 @@ namespace MiniCast.Client.ViewModel.Chromecast
             ScanForDevicesCommand.RaiseCanExecuteChanged();
             try
             {
-                var discoveredDevices = new List<(DiscoveredSsdpDevice discoveredDevice, SsdpDevice device)>();
-
-                await Task.Run(() =>
+                discoverDevices.BeginDiscover(((DiscoveredSsdpDevice discoveredDevice, SsdpDevice device) deviceInfo) =>
                 {
-                    discoverDevices.Discover((DiscoveredSsdpDevice discoveredDevice, SsdpDevice device) =>
+                    var existing = KnownDevices.FirstOrDefault(d => d.Host == deviceInfo.discoveredDevice.DescriptionLocation.Host);
+                    if (existing == null)
                     {
-                        discoveredDevices.Add((discoveredDevice, device));
-                    });
-                });
-
-                foreach (var deviceInfo in discoveredDevices)
-                {
-                   var existing = KnownDevices.FirstOrDefault(d => d.Host == deviceInfo.discoveredDevice.DescriptionLocation.Host);
-                   if (existing == null)
-                   {
                         KnownDevices.Add(new DeviceViewModel(deviceInfo.discoveredDevice, deviceInfo.device));
-                   }
-                }
+                    }
+                });
             }
             finally
             {

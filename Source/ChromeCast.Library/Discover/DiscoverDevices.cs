@@ -6,6 +6,8 @@ using Zeroconf;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace ChromeCast.Library.Discover
 {
@@ -14,51 +16,48 @@ namespace ChromeCast.Library.Discover
         public const int Interval = 2000;
         public const int MaxNumberOfTries = 15;
         private DiscoverServiceSSDP discoverServiceSSDP;
-        private Action<DiscoveredSsdpDevice, SsdpDevice> onDiscovered;
-        private int numberDiscovered;
 
         public DiscoverDevices(DiscoverServiceSSDP discoverServiceSSDPIn)
         {
             discoverServiceSSDP = discoverServiceSSDPIn;
         }
 
-        public void Discover(Action<DiscoveredSsdpDevice, SsdpDevice> onDiscoveredIn)
+        public void BeginDiscover(Action<(DiscoveredSsdpDevice device, SsdpDevice fullDevice)> callback)
         {
-            onDiscovered = onDiscoveredIn;
+            SynchronizationContext syncContext = SynchronizationContext.Current;
 
             // SSDP search
-            discoverServiceSSDP.Discover(onDiscovered, UpdateCounter);
+            discoverServiceSSDP.BeginDiscover(((DiscoveredSsdpDevice device, SsdpDevice fullDevice) newItem) => {
+                syncContext.Post(_ =>
+                {
+                    callback(newItem);
+                }, null);
+            });
 
             // MDNS search
-            MdnsSearch();
-
-            numberDiscovered = 0;
-        }
-
-        public void UpdateCounter()
-        {
-            numberDiscovered++;
-        }
-
-        public async void MdnsSearch()
-        {
-            ILookup<string, string> domains = await ZeroconfResolver.BrowseDomainsAsync(scanTime: new TimeSpan(1000000000), retries: 5, callback: mdnsCallback);
-        }
-
-        private void mdnsCallback(string protocol, string ipAddress)
-        {
-            if (protocol.StartsWith("_googlecast"))
-            {
-                if (ipAddress.Contains(':'))
+            BeginMdnsSearch(((DiscoveredSsdpDevice device, SsdpDevice fullDevice) newItem) => {
+                syncContext.Post(_ =>
                 {
-                    ipAddress = ipAddress.Substring(0, ipAddress.IndexOf(':'));
-                }
+                    callback(newItem);
+                }, null);
+            });
+        }
 
-                onDiscovered(
-                    new DiscoveredSsdpDevice { DescriptionLocation = new Uri($"http://{ipAddress}"), Usn = ipAddress },
-                   new SsdpRootDevice { FriendlyName = GetDeviceFriendlyNameAsync(ipAddress).Result }
-                );
-            }
+        public void BeginMdnsSearch(Action<(DiscoveredSsdpDevice device, SsdpDevice fullDevice)> callback)
+        {
+            ZeroconfResolver.BrowseDomainsAsync(scanTime: new TimeSpan(1000000000), retries: 5, callback: async (string protocol, string rawIpAddress) => {
+                if (protocol.StartsWith("_googlecast"))
+                {
+                    var ipAddress = rawIpAddress.Contains(':') ? rawIpAddress.Substring(0, rawIpAddress.IndexOf(':')) : rawIpAddress;
+
+                    var item = (
+                        new DiscoveredSsdpDevice { DescriptionLocation = new Uri($"http://{ipAddress}"), Usn = ipAddress },
+                        new SsdpRootDevice { FriendlyName = await GetDeviceFriendlyNameAsync(ipAddress) }
+                    );
+
+                    callback(item);
+                }
+            }).Forget();
         }
 
         private async Task<string> GetDeviceFriendlyNameAsync(string ipAddress)

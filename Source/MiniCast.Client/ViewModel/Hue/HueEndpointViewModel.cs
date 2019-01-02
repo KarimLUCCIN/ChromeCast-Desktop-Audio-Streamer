@@ -31,6 +31,8 @@ namespace MiniCast.Client.ViewModel.Hue
         public string ConnectErrorMessage { get; private set; }
         public bool HasConnectErrorMessage => !string.IsNullOrWhiteSpace(ConnectErrorMessage);
 
+        public string Name { get; private set; }
+
         public RelayCommand ConnectCommand { get; private set; }
 
         public HueEndpointViewModel(HueEndpoint deviceInfo)
@@ -42,7 +44,7 @@ namespace MiniCast.Client.ViewModel.Hue
             localSettings = CrossSettings.Current.Get<EndpointSettings>(SettingsKey);
             if (!string.IsNullOrEmpty(localSettings.AppKey))
             {
-                ConnectAsync(autoRegister: false);
+                ConnectAsync(autoRegister: false).Forget();
             }
         }
 
@@ -80,6 +82,9 @@ namespace MiniCast.Client.ViewModel.Hue
                     }
 
                     ConnectErrorMessage = string.Empty;
+
+                    await LoadBridgeInfoAsync();
+
                     IsConnected = true;
                 }
                 catch (Exception ex)
@@ -92,6 +97,13 @@ namespace MiniCast.Client.ViewModel.Hue
             {
                 IsBusy = false;
             }
+        }
+
+        private async Task LoadBridgeInfoAsync()
+        {
+            var bridge = await deviceInfo.Client.GetBridgeAsync();
+
+            Name = bridge.Config.Name;
         }
 
         private async Task RegisterInternalAsync()

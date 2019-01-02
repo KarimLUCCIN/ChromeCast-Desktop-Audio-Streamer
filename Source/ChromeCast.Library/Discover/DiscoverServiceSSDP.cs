@@ -2,19 +2,21 @@
 using Rssdp;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace ChromeCast.Library.Discover
 {
     public class DiscoverServiceSSDP
     {
         private const string ChromeCastUpnpDeviceType = "urn:dial-multiscreen-org:device:dial:1";
-        private Action<DiscoveredSsdpDevice, SsdpDevice> onDiscovered;
-        private Action updateCounter;
 
-        public void Discover(Action<DiscoveredSsdpDevice, SsdpDevice> onDiscoveredIn, Action updateCounterIn)
+        public async void BeginDiscover(Action<(DiscoveredSsdpDevice device, SsdpDevice fullDevice)> callback)
         {
-            onDiscovered = onDiscoveredIn;
-            updateCounter = updateCounterIn;
+            if (callback == null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
 
             var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             var ipAddresses = GetIpAddresses(ipHostInfo);
@@ -28,17 +30,15 @@ namespace ChromeCast.Library.Discover
                     ))
                 {
                     deviceLocator.NotificationFilter = ChromeCastUpnpDeviceType;
-                    deviceLocator.DeviceAvailable += OnDeviceAvailable;
-                    deviceLocator.SearchAsync();
+                    var devices = await deviceLocator.SearchAsync();
+
+                    foreach(var device in devices)
+                    {
+                        var fullDevice = await device.GetDeviceInfo();
+                        callback((device, fullDevice));
+                    }
                 }
             }
-        }
-
-        private async void OnDeviceAvailable(object sender, DeviceAvailableEventArgs e)
-        {
-            var fullDevice = await e.DiscoveredDevice.GetDeviceInfo();
-            onDiscovered?.Invoke(e.DiscoveredDevice, fullDevice);
-            updateCounter?.Invoke();
         }
 
         private IPAddress[] GetIpAddresses(IPHostEntry ipHostInfo)

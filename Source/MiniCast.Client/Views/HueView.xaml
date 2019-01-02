@@ -29,41 +29,51 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <controls:Tile Title="{Binding Address}" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Width="256">
-                        <Grid Width="256">
-                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <Rectangle.Fill>
-                                    <SolidColorBrush Color="{StaticResource Gray8}"/>
-                                </Rectangle.Fill>
-                            </Rectangle>
-                            <Grid>
-                                <Image HorizontalAlignment="Right" Source="/MiniCast.Client;component/Resources/baseline_room_service_black_18dp.png" Opacity="0.2"/>
+                    <Border BorderBrush="White" BorderThickness="1" CornerRadius="2">
+                        <Border.Background>
+                            <SolidColorBrush Color="{StaticResource Gray10}"/>
+                        </Border.Background>
+                        
+                        <Grid Width="256" Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
+                            <TextBlock Grid.Row="1" Text="{Binding Name}"/>
+                            <TextBlock Grid.Row="2" Text="{Binding Address}" FontSize="18"/>
+
+                            <Grid Width="256">
                                 <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="26"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
+                                    <Image Height="128" HorizontalAlignment="Right" Source="/MiniCast.Client;component/Resources/baseline_room_service_black_18dp.png" Opacity="0.2"/>
 
-                                    <Button VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding ConnectCommand}" Visibility="{Binding CanConnect, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">Connect</Button>
-                                    <StackPanel Orientation="Horizontal" Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
-                                        <Image Source="/MiniCast.Client;component/Resources/baseline_done_black_18dp.png" Width="24" Height="24"/>
-                                        <TextBlock VerticalAlignment="Center">Connected</TextBlock>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="26"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <Button VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding ConnectCommand}" Visibility="{Binding CanConnect, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">Connect</Button>
+                                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                                            <Image Source="/MiniCast.Client;component/Resources/baseline_done_black_18dp.png" Width="24" Height="24"/>
+                                            <TextBlock VerticalAlignment="Center">Connected</TextBlock>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Row="1" Foreground="Red" TextWrapping="Wrap" Text="{Binding ConnectErrorMessage}" Visibility="{Binding HasConnectErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"/>
+
+                                        <controls:ProgressRing Grid.RowSpan="2" IsActive="{Binding IsBusy}"/>
+                                    </Grid>
+
+                                    <StackPanel Orientation="Vertical" Margin="10">
+                                        <TextBlock Text="{Binding Host}"/>
+                                        <TextBlock Text="{Binding DeviceInfo.Manufacturer}"/>
+                                        <TextBlock Text="{Binding DeviceInfo.ModelName}"/>
                                     </StackPanel>
-
-                                    <TextBlock Grid.Row="1" Foreground="Red" TextWrapping="Wrap" Text="{Binding ConnectErrorMessage}" Visibility="{Binding HasConnectErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"/>
-
-                                    <controls:ProgressRing Grid.RowSpan="2" IsActive="{Binding IsBusy}"/>
                                 </Grid>
-
-                                <StackPanel Orientation="Vertical" Margin="10">
-                                    <TextBlock Text="{Binding Host}"/>
-                                    <TextBlock Text="{Binding DeviceInfo.Manufacturer}"/>
-                                    <TextBlock Text="{Binding DeviceInfo.ModelName}"/>
-                                </StackPanel>
                             </Grid>
                         </Grid>
-                    </controls:Tile>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
