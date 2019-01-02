@@ -43,6 +43,14 @@ namespace MiniCast.Client.ViewModel.Chromecast
             DevicesEnumeratorViewModel.ScanForDevicesCommand.Execute(null);
         }
 
+        public override void Cleanup()
+        {
+            loopbackRecorder.StopRecording();
+
+            DevicesEnumeratorViewModel.Cleanup();
+            base.Cleanup();
+        }
+
         private async void OnRecordingDataAvailable(ArraySegment<byte> dataToSend, WaveFormat format)
         {
             var dataSize = dataToSend.Count;

@@ -67,6 +67,13 @@ namespace MiniCast.Client.ViewModel.Chromecast
             };
         }
 
+        public override void Cleanup()
+        {
+            deviceConnection.Dispose();
+
+            base.Cleanup();
+        }
+
         public async Task SendRecordingDataAsync(ArraySegment<byte> dataToSend, WaveFormat format)
         {
             await deviceConnection.SendRecordingDataAsync(dataToSend, format);

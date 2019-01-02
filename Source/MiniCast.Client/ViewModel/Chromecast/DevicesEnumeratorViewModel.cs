@@ -28,6 +28,16 @@ namespace MiniCast.Client.ViewModel.Chromecast
             ScanForDevicesCommand = new RelayCommand(ScanForDevices, () => !IsBusy);
         }
 
+        public override void Cleanup()
+        {
+            foreach(var device in KnownDevices)
+            {
+                device.Cleanup();
+            }
+
+            base.Cleanup();
+        }
+
         private async void ScanForDevices()
         {
             if (IsBusy)

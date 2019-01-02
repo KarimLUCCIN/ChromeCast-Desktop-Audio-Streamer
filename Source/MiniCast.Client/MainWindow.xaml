@@ -10,6 +10,7 @@
         xmlns:viewModelChromecast="clr-namespace:MiniCast.Client.ViewModel.Chromecast"
         xmlns:viewModelHue="clr-namespace:MiniCast.Client.ViewModel.Hue"
         xmlns:core="clr-namespace:MiniCast.Client.Core"
+        Closed="MetroWindow_Closed"
         mc:Ignorable="d"
         Title="MiniCast" Height="450" Width="800">
     <Grid DataContext="{Binding Main, Source={StaticResource Locator}}">

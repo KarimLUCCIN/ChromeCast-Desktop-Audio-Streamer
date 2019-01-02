@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using MiniCast.Client.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,11 @@ namespace MiniCast.Client
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void MetroWindow_Closed(object sender, EventArgs e)
+        {
+            ViewModelLocator.Cleanup();
         }
     }
 }

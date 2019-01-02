@@ -63,7 +63,9 @@ namespace MiniCast.Client.ViewModel
 
         public static void Cleanup()
         {
-            // TODO Clear the ViewModels
+            Instance.Main.Cleanup();
+            Instance.Hue.Cleanup();
+            Instance.Chromecast.Cleanup();
         }
     }
 }
