@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Net.Sockets;
-using NAudio.Wave;
+using CSCore;
 
 namespace ChromeCast.Library.Streaming
 {

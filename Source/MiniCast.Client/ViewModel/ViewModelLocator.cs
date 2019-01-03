@@ -47,12 +47,15 @@ namespace MiniCast.Client.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
+            SimpleIoc.Default.Register<AudioLoopbackViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<ChromecastViewModel>();
             SimpleIoc.Default.Register<HomeViewModel>();
             SimpleIoc.Default.Register<HueViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
         }
+
+        public AudioLoopbackViewModel LoopbackRecorder => ServiceLocator.Current.GetInstance<AudioLoopbackViewModel>();
 
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
         public Chromecast.ChromecastViewModel Chromecast => ServiceLocator.Current.GetInstance<ChromecastViewModel>();
@@ -66,6 +69,7 @@ namespace MiniCast.Client.ViewModel
             Instance.Main.Cleanup();
             Instance.Hue.Cleanup();
             Instance.Chromecast.Cleanup();
+            Instance.LoopbackRecorder.Cleanup();
         }
     }
 }

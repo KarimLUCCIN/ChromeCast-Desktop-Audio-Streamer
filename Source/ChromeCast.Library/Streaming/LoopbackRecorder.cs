@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using NAudio.Wave;
 using CSCore.CoreAudioAPI;
 using CSCore.SoundIn;
 using CSCore.Streams;
@@ -14,11 +13,15 @@ namespace ChromeCast.Library.Streaming
     public class LoopbackRecorder
     {
         WasapiCapture soundIn;
-        private Action<ArraySegment<byte>, NAudio.Wave.WaveFormat> dataAvailableCallback;
+        private Action<ArraySegment<byte>, CSCore.WaveFormat> dataAvailableCallback;
         private bool isRecording = false;
         IWaveSource convertedSource;
         SoundInSource soundInSource;
-        NAudio.Wave.WaveFormat waveFormat;
+        CSCore.WaveFormat waveFormat;
+
+        public WaveFormat WaveFormat => waveFormat;
+        public IWaveSource WaveSource => convertedSource;
+        public SoundInSource SoundInSource => soundInSource;
 
         class BufferBlock
         {
@@ -46,7 +49,7 @@ namespace ChromeCast.Library.Streaming
             StopRecording();
         }
 
-        public void StartRecording(MMDevice device, Action<ArraySegment<byte>, NAudio.Wave.WaveFormat> dataAvailableCallbackIn)
+        public void StartRecording(MMDevice device, Action<ArraySegment<byte>, CSCore.WaveFormat> dataAvailableCallbackIn)
         {
             if (isRecording)
                 return;
@@ -78,9 +81,8 @@ namespace ChromeCast.Library.Streaming
             convertedSource = convertedSource.ToStereo();
             soundInSource.DataAvailable += OnDataAvailable;
             soundIn.Start();
-
-            var format = convertedSource.WaveFormat;
-            waveFormat = NAudio.Wave.WaveFormat.CreateCustomFormat(WaveFormatEncoding.Pcm, format.SampleRate, format.Channels, format.BytesPerSecond, format.BlockAlign, format.BitsPerSample);
+            
+            waveFormat = convertedSource.WaveFormat;
 
             buffer0 = new BufferBlock() { Data = new byte[convertedSource.WaveFormat.BytesPerSecond / 2] };
             buffer1 = new BufferBlock() { Data = new byte[convertedSource.WaveFormat.BytesPerSecond / 2] };
@@ -125,6 +127,11 @@ namespace ChromeCast.Library.Streaming
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
+
+                if (Debugger.IsAttached)
+                {
+                    Debugger.Break();
+                }
             }
         }
 

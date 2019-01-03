@@ -97,5 +97,7 @@
 
             <views:ChromecastActionsView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
         </Grid>
+
+        <!--<cscore:PeakSpectrum Grid.ColumnSpan="2" VerticalAlignment="Bottom" Height="128" IsHitTestVisible="False" DataProvider="{Binding LoopbackRecorder.Spectrum, Source={StaticResource Locator}}"></cscore:PeakSpectrum>-->
     </Grid>
 </controls:MetroWindow>

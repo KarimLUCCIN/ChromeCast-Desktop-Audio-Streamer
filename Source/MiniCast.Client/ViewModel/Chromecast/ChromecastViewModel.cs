@@ -1,8 +1,8 @@
 ﻿using ChromeCast.Library.Classes;
 using ChromeCast.Library.Streaming;
+using CSCore;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using NAudio.Wave;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -18,8 +18,6 @@ namespace MiniCast.Client.ViewModel.Chromecast
 {
     public class ChromecastViewModel : ViewModelBase, INotifyPropertyChanged
     {
-        private LoopbackRecorder loopbackRecorder;
-
         public DevicesEnumeratorViewModel DevicesEnumeratorViewModel { get; } = new DevicesEnumeratorViewModel();
 
         public DeviceViewModel CurrentDevice { get; set; }
@@ -32,21 +30,15 @@ namespace MiniCast.Client.ViewModel.Chromecast
 
         public ChromecastViewModel()
         {
-            loopbackRecorder = new LoopbackRecorder();
-            loopbackRecorder.StartRecording(LoopbackRecorder.GetDevices().defaultDevice, (ArraySegment<byte> dataToSend, WaveFormat format) =>
-            {
-                OnRecordingDataAvailable(dataToSend, format);
-            });
-
             SelectDeviceCommand = new RelayCommand<DeviceViewModel>(SelectDevice);
 
             DevicesEnumeratorViewModel.ScanForDevicesCommand.Execute(null);
+
+            ViewModelLocator.Instance.LoopbackRecorder.RecordingDataAvailable += OnRecordingDataAvailable;
         }
 
         public override void Cleanup()
         {
-            loopbackRecorder.StopRecording();
-
             DevicesEnumeratorViewModel.Cleanup();
             base.Cleanup();
         }

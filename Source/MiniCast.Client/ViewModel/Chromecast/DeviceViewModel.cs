@@ -11,9 +11,9 @@ using System.Windows.Input;
 using ChromeCast.Library.Communication;
 using ChromeCast.Library.Communication.Classes;
 using ChromeCast.Library.Networking;
+using CSCore;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using NAudio.Wave;
 using Rssdp;
 
 namespace MiniCast.Client.ViewModel.Chromecast

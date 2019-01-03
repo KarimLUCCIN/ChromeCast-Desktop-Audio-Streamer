@@ -250,8 +250,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Audio\BasicSpectrumProvider.cs" />
     <Compile Include="Converters\DeviceStateToStringConverter.cs" />
     <Compile Include="Core\SelectedItemToContentConverter.cs" />
+    <Compile Include="ViewModel\AudioLoopbackViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\ChromecastViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\DeviceViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\DevicesEnumeratorViewModel.cs" />

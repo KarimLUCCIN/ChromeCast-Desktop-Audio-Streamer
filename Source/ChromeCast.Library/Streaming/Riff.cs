@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
-using NAudio.Wave;
 using System;
+using CSCore;
 
 namespace ChromeCast.Library.Streaming
 {
@@ -13,7 +13,7 @@ namespace ChromeCast.Library.Streaming
         public static byte[] GetRiffHeader(WaveFormat format)
         {
             var riffHeaderStream = new MemoryStream();
-            WriteWavHeader(riffHeaderStream, format.Encoding == WaveFormatEncoding.IeeeFloat, (ushort)format.Channels, (ushort)format.BitsPerSample, format.SampleRate, 0);
+            WriteWavHeader(riffHeaderStream, format.WaveFormatTag == AudioEncoding.IeeeFloat, (ushort)format.Channels, (ushort)format.BitsPerSample, format.SampleRate, 0);
 
             return riffHeaderStream.ToArray();
         }

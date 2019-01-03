@@ -1,7 +1,7 @@
 ﻿using ChromeCast.Desktop.AudioStreamer.ProtocolBuffer;
 using ChromeCast.Library.Communication;
 using ChromeCast.Library.Streaming;
-using NAudio.Wave;
+using CSCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
