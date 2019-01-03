@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="SpectrumAnalyzer.Controls.AudioSpectrum"
+             x:Name="SpectrumControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:SpectrumAnalyzer.Controls"
+             mc:Ignorable="d"
+             VerticalAlignment="Stretch"
+             DataContext="{Binding LoopbackRecorder.Analyzer, Source={StaticResource Locator}}">
+    <Grid>
+        <ItemsControl x:Name="Spectrum"
+                  ItemsSource="{Binding FrequencyBins}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls:AudioLine FrequencyBin="{Binding .}"
+                                    SpeedDropping="{Binding SpeedDropping, ElementName=SpectrumControl}"
+                                    SpeedRaising="{Binding SpeedRaising, ElementName=SpectrumControl}"
+                                    Foreground="{Binding Foreground, ElementName=SpectrumControl}"
+                                    ForegroundPitched="{Binding ForegroundPitched, ElementName=SpectrumControl}"
+                                    PitchColor="{Binding PitchColor, ElementName=SpectrumControl}"
+                                    Height="{Binding Height, ElementName=SpectrumControl}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Observers"
+                               Margin="5"
+                       />
+            <ItemsControl ItemsSource="{Binding FrequencyObservers}"
+                                  HorizontalAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <Rectangle Height="20" Width="20"
+                                               Margin="5">
+                                <Rectangle.Style>
+                                    <Style TargetType="Rectangle">
+                                        <Setter Property="Fill" Value="{Binding IdleColor}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding BeatDetected}" Value="True">
+                                                <Setter Property="Fill" Value="{Binding PitchColor}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Rectangle.Style>
+                            </Rectangle>
+                            <TextBlock Margin="5">
+                                        <Run Text="{Binding Title}"/>
+                                        <Run Text="{Binding MinFrequency, StringFormat='{}&#x09;({0:00000}Hz -'}"/>
+                                        <Run Text="{Binding MaxFrequency, StringFormat='{}{0:00000}Hz)'}"/>
+                                        <Run Text="{Binding AverageEnergy, StringFormat='{}&#x09;avg: {0:F10}'}"/>
+                            </TextBlock>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -247,9 +247,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Audio\BasicSpectrumProvider.cs" />
     <Compile Include="Converters\DeviceStateToStringConverter.cs" />
     <Compile Include="Core\SelectedItemToContentConverter.cs" />
+    <Compile Include="Spectrum\Controls\AudioLine.xaml.cs">
+      <DependentUpon>AudioLine.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Spectrum\Controls\AudioSpectrum.xaml.cs">
+      <DependentUpon>AudioSpectrum.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Spectrum\Enums\ScalingStrategy.cs" />
+    <Compile Include="Spectrum\Helpers\ArrayHelper.cs" />
+    <Compile Include="Spectrum\Helpers\ColorHelper.cs" />
+    <Compile Include="Spectrum\Models\AnalyzerViewModel.cs" />
+    <Compile Include="Spectrum\Models\FrequencyBin.cs" />
+    <Compile Include="Spectrum\Models\FrequencyObserver.cs" />
+    <Compile Include="Spectrum\Models\SpectrumProvider.cs" />
     <Compile Include="ViewModel\AudioLoopbackViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\ChromecastViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\DeviceViewModel.cs" />
@@ -288,6 +300,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Spectrum\Controls\AudioLine.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Spectrum\Controls\AudioSpectrum.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\ChromecastActionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -362,6 +382,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\baseline_done_black_18dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Spectrum\Credits.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.3.2\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.2\build\Fody.targets')" />

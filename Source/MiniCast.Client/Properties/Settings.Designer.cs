@@ -25,13 +25,37 @@ namespace MiniCast.Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Test")]
-        public string Setting {
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int Bins {
             get {
-                return ((string)(this["Setting"]));
+                return ((int)(this["Bins"]));
             }
             set {
-                this["Setting"] = value;
+                this["Bins"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int Rate {
+            get {
+                return ((int)(this["Rate"]));
+            }
+            set {
+                this["Rate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("255")]
+        public int Normal {
+            get {
+                return ((int)(this["Normal"]));
+            }
+            set {
+                this["Normal"] = value;
             }
         }
     }
