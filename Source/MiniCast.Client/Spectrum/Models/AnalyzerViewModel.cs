@@ -207,6 +207,24 @@ namespace SpectrumAnalyzer.Models
             return (value, (bitsPerSample / 8));
         }
 
+        private void InitializeCapture(WaveFormat format)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                FrequencyBins.Clear();
+                foreach (var frequencyBin in Enumerable.Range(0, Bins).Select(i => new FrequencyBin(i)))
+                {
+                    FrequencyBins.Add(frequencyBin);
+                }
+            });
+
+            _spectrumData = new float[(int) FftSize];
+            _history = new Queue<float[]>(_rate);
+
+            _spectrumProvider = new SpectrumProvider(format.Channels, format.SampleRate, FftSize);
+            UpdateFrequencyMapping();
+        }
+
         public void AddData(ArraySegment<byte> data, WaveFormat format)
         {
             var currentDataPtr = data;
@@ -218,7 +236,7 @@ namespace SpectrumAnalyzer.Models
                 for (int j = 0; j < format.Channels; j++)
                 {
                     var step = ConvertToSample(currentDataPtr, format.BitsPerSample, mindown: true);
-                    i += format.BitsPerSample;
+                    i += step.increment;
 
                     if (j % 2 == 0)
                     {
@@ -240,24 +258,6 @@ namespace SpectrumAnalyzer.Models
 
                 _spectrumProvider.Add(left, right);
             }
-        }
-
-        private void InitializeCapture(WaveFormat format)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                FrequencyBins.Clear();
-                foreach (var frequencyBin in Enumerable.Range(0, Bins).Select(i => new FrequencyBin(i)))
-                {
-                    FrequencyBins.Add(frequencyBin);
-                }
-            });
-
-            _spectrumData = new float[(int) FftSize];
-            _history = new Queue<float[]>(_rate);
-
-            _spectrumProvider = new SpectrumProvider(format.Channels, format.SampleRate, FftSize);
-            UpdateFrequencyMapping();
         }
 
         #endregion
@@ -307,6 +307,8 @@ namespace SpectrumAnalyzer.Models
                     _spectrumLogarithmicScaleIndexMax[_spectrumLogarithmicScaleIndexMax.Length - 1] = _maximumFrequencyIndex;
         }
 
+        double[] frequencyBins = null;
+
         // based on the https://github.com/filoe/cscore visualization example
         private void UpdateSpectrum(object sender, EventArgs e)
         {
@@ -328,7 +330,10 @@ namespace SpectrumAnalyzer.Models
                 double actualMaxValue = Normal;
                 var spectrumPointIndex = 0;
 
-                var frequencyBins = new double[Bins];
+                if(frequencyBins == null || frequencyBins.Length != Bins)
+                {
+                    frequencyBins = new double[Bins];
+                }
 
                 for (var i = _minimumFrequencyIndex; i <= _maximumFrequencyIndex; i++)
                 {
@@ -370,7 +375,7 @@ namespace SpectrumAnalyzer.Models
                     }
                 }
 
-                var disp = Application?.Current?.Dispatcher;
+                var disp = Application.Current?.Dispatcher;
                 if (disp != null)
                 {
                     Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
