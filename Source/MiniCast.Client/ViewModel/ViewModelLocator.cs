@@ -50,7 +50,7 @@ namespace MiniCast.Client.ViewModel
             SimpleIoc.Default.Register<AudioLoopbackViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<ChromecastViewModel>();
-            SimpleIoc.Default.Register<HomeViewModel>();
+            SimpleIoc.Default.Register<MusicColorViewModel>();
             SimpleIoc.Default.Register<HueViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
         }
@@ -60,7 +60,7 @@ namespace MiniCast.Client.ViewModel
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
         public Chromecast.ChromecastViewModel Chromecast => ServiceLocator.Current.GetInstance<ChromecastViewModel>();
 
-        public HomeViewModel Home => ServiceLocator.Current.GetInstance<HomeViewModel>();
+        public MusicColorViewModel MusicColor => ServiceLocator.Current.GetInstance<MusicColorViewModel>();
         public HueViewModel Hue => ServiceLocator.Current.GetInstance<HueViewModel>();
         public SettingsViewModel Settings => ServiceLocator.Current.GetInstance<SettingsViewModel>();
 

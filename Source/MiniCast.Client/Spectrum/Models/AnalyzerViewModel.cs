@@ -35,8 +35,16 @@ namespace SpectrumAnalyzer.Models
             Initialize(format);
         }
 
+        public override void Cleanup()
+        {
+            cleanedUp = true;
+
+            base.Cleanup();
+        }
+
         #region Fields
 
+        private bool cleanedUp = false;
         private const FftSize FftSize = CSCore.DSP.FftSize.Fft4096;
         private const int ScaleFactorLinear = 9;
         private const int ScaleFactorSqrt = 2;
@@ -150,7 +158,7 @@ namespace SpectrumAnalyzer.Models
 
         #region Private
 
-        private static int SpectrumDataSize => (int) FftSize / 2 - 1;
+        private static int SpectrumDataSize => (int)FftSize / 2 - 1;
 
         #endregion
 
@@ -218,7 +226,7 @@ namespace SpectrumAnalyzer.Models
                 }
             });
 
-            _spectrumData = new float[(int) FftSize];
+            _spectrumData = new float[(int)FftSize];
             _history = new Queue<float[]>(_rate);
 
             _spectrumProvider = new SpectrumProvider(format.Channels, format.SampleRate, FftSize);
@@ -271,7 +279,7 @@ namespace SpectrumAnalyzer.Models
             _maximumFrequencyIndex = Math.Min(_spectrumProvider.GetFftBandIndex(MaxFrequency) + 1, SpectrumDataSize);
 
             var indexCount = _maximumFrequencyIndex - _minimumFrequencyIndex;
-            var linearIndexBucketSize = Math.Round(indexCount / (double) _bins, 3);
+            var linearIndexBucketSize = Math.Round(indexCount / (double)_bins, 3);
 
             _spectrumLinearScaleIndexMax = _spectrumLinearScaleIndexMax.CheckBuffer(_bins, true);
             _spectrumLogarithmicScaleIndexMax = _spectrumLogarithmicScaleIndexMax.CheckBuffer(_bins, true);
@@ -281,10 +289,10 @@ namespace SpectrumAnalyzer.Models
             {
                 var map = i - 1;
                 var logIndex =
-                    (int) ((maxLog - Math.Log(_bins + 1 - i, _bins + 1)) * indexCount) +
+                    (int)((maxLog - Math.Log(_bins + 1 - i, _bins + 1)) * indexCount) +
                     _minimumFrequencyIndex;
 
-                _spectrumLinearScaleIndexMax[map] = _minimumFrequencyIndex + (int) (i * linearIndexBucketSize);
+                _spectrumLinearScaleIndexMax[map] = _minimumFrequencyIndex + (int)(i * linearIndexBucketSize);
                 _spectrumLogarithmicScaleIndexMax[map] = logIndex;
 
                 if (FrequencyBins is null) continue; // apply band to bin:
@@ -312,6 +320,11 @@ namespace SpectrumAnalyzer.Models
         // based on the https://github.com/filoe/cscore visualization example
         private void UpdateSpectrum(object sender, EventArgs e)
         {
+            if (cleanedUp)
+            {
+                return;
+            }
+
             try
             {
                 if (!_spectrumProvider.IsNewDataAvailable)
@@ -330,7 +343,7 @@ namespace SpectrumAnalyzer.Models
                 double actualMaxValue = Normal;
                 var spectrumPointIndex = 0;
 
-                if(frequencyBins == null || frequencyBins.Length != Bins)
+                if (frequencyBins == null || frequencyBins.Length != Bins)
                 {
                     frequencyBins = new double[Bins];
                 }

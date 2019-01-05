@@ -46,8 +46,8 @@
             </DataTemplate>
 
             <!--  these are the templates for the view models  -->
-            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
-                <views:HomeView DataContext="{Binding}" />
+            <DataTemplate DataType="{x:Type viewModel:MusicColorViewModel}">
+                <views:MusicColorView DataContext="{Binding}" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModelChromecast:ChromecastViewModel}">
                 <views:ChromecastView DataContext="{Binding}" />

@@ -33,13 +33,6 @@ namespace MiniCast.Client.ViewModel
             {
                 new HamburgerMenuIconItem()
                 {
-                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Home},
-                    Label = "Home",
-                    ToolTip = "The Home view.",
-                    Tag = ViewModelLocator.Instance.Home
-                },
-                new HamburgerMenuIconItem()
-                {
                     Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Cast},
                     Label = "Chromecast",
                     ToolTip = "Chromecast Settings.",
@@ -51,6 +44,13 @@ namespace MiniCast.Client.ViewModel
                     Label = "Hue",
                     ToolTip = "Philips Hue.",
                     Tag =  ViewModelLocator.Instance.Hue
+                },
+                new HamburgerMenuIconItem()
+                {
+                    Icon = new PackIconMaterial() {Kind = PackIconMaterialKind.Music},
+                    Label = "Music Colors",
+                    ToolTip = "Music Color Setup",
+                    Tag = ViewModelLocator.Instance.MusicColor
                 }
             };
 

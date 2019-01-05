@@ -97,6 +97,12 @@
     <Reference Include="Rssdp, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rssdp.4.0.2\lib\net45\Rssdp.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.AppContext.4.1.0\lib\net463\System.AppContext.dll</HintPath>
@@ -249,6 +255,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\DeviceStateToStringConverter.cs" />
     <Compile Include="Core\SelectedItemToContentConverter.cs" />
+    <Compile Include="Effects\ColoredQuadEffect.cs" />
     <Compile Include="Spectrum\Controls\AudioLine.xaml.cs">
       <DependentUpon>AudioLine.xaml</DependentUpon>
     </Compile>
@@ -266,7 +273,7 @@
     <Compile Include="ViewModel\Chromecast\ChromecastViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\DeviceViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\DevicesEnumeratorViewModel.cs" />
-    <Compile Include="ViewModel\HomeViewModel.cs" />
+    <Compile Include="ViewModel\MusicColorViewModel.cs" />
     <Compile Include="ViewModel\Hue\HueDevicesEnumeratorViewModel.cs" />
     <Compile Include="ViewModel\Hue\HueEndpointViewModel.cs" />
     <Compile Include="ViewModel\Hue\HueViewModel.cs" />
@@ -279,8 +286,8 @@
     <Compile Include="Views\ChromecastView.xaml.cs">
       <DependentUpon>ChromecastView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HomeView.xaml.cs">
-      <DependentUpon>HomeView.xaml</DependentUpon>
+    <Compile Include="Views\MusicColorView.xaml.cs">
+      <DependentUpon>MusicColorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HueView.xaml.cs">
       <DependentUpon>HueView.xaml</DependentUpon>
@@ -316,7 +323,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HomeView.xaml">
+    <Page Include="Views\MusicColorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -385,6 +392,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Spectrum\Credits.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ColoredQuadShader.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.3.2\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.2\build\Fody.targets')" />

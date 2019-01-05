@@ -48,6 +48,9 @@ namespace Q42.HueApi.NET
 
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
             {
+                socket.ReceiveTimeout = (int)timeout.TotalMilliseconds;
+                socket.SendTimeout = (int)timeout.TotalMilliseconds;
+
                 socket.Bind(new IPEndPoint(IPAddress.Any, unicastPort));
                 socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(multicastAddress, IPAddress.Any));
                 var thd = new Thread(() => GetSocketResponse(socket));

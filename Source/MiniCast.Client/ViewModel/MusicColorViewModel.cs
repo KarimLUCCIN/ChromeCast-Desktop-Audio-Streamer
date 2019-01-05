@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniCast.Client.ViewModel
 {
-    public class HomeViewModel
+    public class MusicColorViewModel
     {
     }
 }

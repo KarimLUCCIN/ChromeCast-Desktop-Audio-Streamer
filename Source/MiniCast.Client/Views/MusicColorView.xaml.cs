@@ -18,9 +18,9 @@ namespace MiniCast.Client.Views
     /// <summary>
     /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class HomeView : UserControl
+    public partial class MusicColorView : UserControl
     {
-        public HomeView()
+        public MusicColorView()
         {
             InitializeComponent();
         }
