@@ -1,0 +1,44 @@
+﻿<UserControl
+    x:Class="ColorWheel.Controls.ColorPinpoint"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:core="clr-namespace:ColorWheel.Core"
+    xmlns:cc="clr-namespace:ColorWheel.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="100"
+    d:DesignWidth="100">
+    
+    <UserControl.Resources>
+        <core:ColorToBrush
+            x:Key="ColorToBrush" />
+        <cc:IsSelectedThickness
+            x:Key="IsSelectedThickness" />
+    </UserControl.Resources>
+
+    <Grid
+        Background="Transparent"
+        VerticalAlignment="Stretch"
+        HorizontalAlignment="Stretch">
+
+        <Ellipse
+            x:Name="main"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            Fill="{Binding CurrentColor, Converter={StaticResource ColorToBrush}, Mode=OneWay}"
+            Stroke="{Binding CurrentBorderColor, Converter={StaticResource ColorToBrush}, Mode=OneWay}"
+            StrokeThickness="{Binding Path=PaletteColor.IsSelected, Converter={StaticResource IsSelectedThickness}, Mode=OneWay}" />
+
+        <Ellipse
+            Width="4"            
+            Height="4"
+            x:Name="center"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Fill="{Binding CurrentBorderColor, Converter={StaticResource ColorToBrush}, Mode=OneWay}"
+            Visibility="{Binding Path=IsMainVisibility, Mode=OneWay}" />
+
+    </Grid>
+
+</UserControl>
