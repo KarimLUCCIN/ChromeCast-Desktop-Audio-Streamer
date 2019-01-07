@@ -37,6 +37,37 @@ namespace MiniCast.Client.Effects
         public ColoredQuadEffect()
         {
             PixelShader = CompiledShader.Get();
+
+            UpdateShaderValue(BaseColorProperty);
+            UpdateShaderValue(HighOctavesColorProperty);
+            UpdateShaderValue(LowOctavesColorProperty);
         }
+
+        public Color BaseColor
+        {
+            get { return (Color)GetValue(BaseColorProperty); }
+            set { SetValue(BaseColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty BaseColorProperty =
+            DependencyProperty.Register("BaseColor", typeof(Color), typeof(ColoredQuadEffect), new UIPropertyMetadata(Colors.Transparent, PixelShaderConstantCallback(0)));
+
+        public Color HighOctavesColor
+        {
+            get { return (Color)GetValue(HighOctavesColorProperty); }
+            set { SetValue(HighOctavesColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty HighOctavesColorProperty =
+            DependencyProperty.Register("HighOctavesColor", typeof(Color), typeof(ColoredQuadEffect), new UIPropertyMetadata(Colors.Transparent, PixelShaderConstantCallback(1)));
+
+        public Color LowOctavesColor
+        {
+            get { return (Color)GetValue(LowOctavesColorProperty); }
+            set { SetValue(LowOctavesColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty LowOctavesColorProperty =
+            DependencyProperty.Register("LowOctavesColor", typeof(Color), typeof(ColoredQuadEffect), new UIPropertyMetadata(Colors.Transparent, PixelShaderConstantCallback(2)));
     }
 }

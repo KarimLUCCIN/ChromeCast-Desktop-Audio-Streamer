@@ -718,7 +718,7 @@ namespace ColorWheel.Controls
                         {
                             Opacity          = 0.9,
                             IsHitTestVisible = true,
-                            Width            = ewidth,
+                            // Width            = ewidth,
                             Height           = ewidth,
                             CurrentColor     = Colors.Black,
                             Tag              = i,

@@ -317,6 +317,8 @@ namespace SpectrumAnalyzer.Models
 
         double[] frequencyBins = null;
 
+        public event Action<ObservableCollection<FrequencyBin>, double> BinsUpdated;
+
         // based on the https://github.com/filoe/cscore visualization example
         private void UpdateSpectrum(object sender, EventArgs e)
         {
@@ -332,6 +334,8 @@ namespace SpectrumAnalyzer.Models
                     Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                     {
                         foreach (var frequencyBin in FrequencyBins) frequencyBin.Value = 0;
+
+                        BinsUpdated?.Invoke(FrequencyBins, Normal);
                     }));
                     return;
                 }
@@ -395,6 +399,8 @@ namespace SpectrumAnalyzer.Models
                     {
                         var index = 0;
                         foreach (var frequencyBin in FrequencyBins) frequencyBin.Value = frequencyBins[index++];
+
+                        BinsUpdated?.Invoke(FrequencyBins, actualMaxValue);
                     }));
                 }
             }

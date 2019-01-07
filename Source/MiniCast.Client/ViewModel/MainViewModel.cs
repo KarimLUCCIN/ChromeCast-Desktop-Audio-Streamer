@@ -25,6 +25,8 @@ namespace MiniCast.Client.ViewModel
         public MainViewModel()
         {
             this.CreateMenuItems();
+
+            ViewModelLocator.Instance.Hue.BeginUpdateEveryFrame();
         }
 
         public void CreateMenuItems()

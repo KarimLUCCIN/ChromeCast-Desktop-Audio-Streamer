@@ -22,10 +22,16 @@
         VerticalAlignment="Stretch"
         HorizontalAlignment="Stretch">
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
         <Ellipse
             x:Name="main"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
+            Grid.Column="0"
             Fill="{Binding CurrentColor, Converter={StaticResource ColorToBrush}, Mode=OneWay}"
             Stroke="{Binding CurrentBorderColor, Converter={StaticResource ColorToBrush}, Mode=OneWay}"
             StrokeThickness="{Binding Path=PaletteColor.IsSelected, Converter={StaticResource IsSelectedThickness}, Mode=OneWay}" />
@@ -36,8 +42,11 @@
             x:Name="center"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
+            Grid.Column="0"
             Fill="{Binding CurrentBorderColor, Converter={StaticResource ColorToBrush}, Mode=OneWay}"
             Visibility="{Binding Path=IsMainVisibility, Mode=OneWay}" />
+
+        <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" Text="{Binding Path=PaletteColor.Name}"/>
 
     </Grid>
 

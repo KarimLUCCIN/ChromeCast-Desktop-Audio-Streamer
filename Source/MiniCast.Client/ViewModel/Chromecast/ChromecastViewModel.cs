@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace MiniCast.Client.ViewModel.Chromecast
 {
-    public class ChromecastViewModel : ViewModelBase, INotifyPropertyChanged
+    public class ChromecastViewModel : RootViewModelBase, INotifyPropertyChanged
     {
         public DevicesEnumeratorViewModel DevicesEnumeratorViewModel { get; } = new DevicesEnumeratorViewModel();
 

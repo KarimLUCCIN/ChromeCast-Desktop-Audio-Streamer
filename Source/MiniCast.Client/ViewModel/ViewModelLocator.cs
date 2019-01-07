@@ -15,6 +15,7 @@
 using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using MiniCast.Client.Spectrum.Models;
 using MiniCast.Client.ViewModel.Chromecast;
 using MiniCast.Client.ViewModel.Hue;
 
@@ -53,6 +54,8 @@ namespace MiniCast.Client.ViewModel
             SimpleIoc.Default.Register<MusicColorViewModel>();
             SimpleIoc.Default.Register<HueViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
+
+            SimpleIoc.Default.Register<LiveColorEvaluatorModel>();
         }
 
         public AudioLoopbackViewModel LoopbackRecorder => ServiceLocator.Current.GetInstance<AudioLoopbackViewModel>();
@@ -61,6 +64,8 @@ namespace MiniCast.Client.ViewModel
         public Chromecast.ChromecastViewModel Chromecast => ServiceLocator.Current.GetInstance<ChromecastViewModel>();
 
         public MusicColorViewModel MusicColor => ServiceLocator.Current.GetInstance<MusicColorViewModel>();
+        public LiveColorEvaluatorModel LiveColor => ServiceLocator.Current.GetInstance<LiveColorEvaluatorModel>();
+
         public HueViewModel Hue => ServiceLocator.Current.GetInstance<HueViewModel>();
         public SettingsViewModel Settings => ServiceLocator.Current.GetInstance<SettingsViewModel>();
 

@@ -253,6 +253,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ColorWheel\Controls\BrightnessSaturationControl.xaml.cs">
+      <DependentUpon>BrightnessSaturationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorWheel\Controls\ColorComponentSlider.cs" />
+    <Compile Include="ColorWheel\Controls\ColorPinpoint.xaml.cs">
+      <DependentUpon>ColorPinpoint.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorWheel\Controls\ColorWheelControl.xaml.cs">
+      <DependentUpon>ColorWheelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorWheel\Controls\SpectrumControl.xaml.cs">
+      <DependentUpon>SpectrumControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ColorWheel\Controls\Utilities.cs" />
+    <Compile Include="ColorWheel\Core\ColorFormats.cs" />
+    <Compile Include="ColorWheel\Core\ColorManip.cs" />
+    <Compile Include="ColorWheel\Core\ColorWheel.cs" />
+    <Compile Include="ColorWheel\Core\Converters\ColorConverters.cs" />
+    <Compile Include="ColorWheel\Core\Converters\ToBrush.cs" />
+    <Compile Include="ColorWheel\Core\Palette.cs" />
+    <Compile Include="ColorWheel\Core\ThemeSupport\ColorManager.cs" />
+    <Compile Include="ColorWheel\Core\ThemeSupport\ColorTemplate.cs" />
+    <Compile Include="ColorWheel\Core\Utilities\DynamicObject.cs" />
+    <Compile Include="ColorWheel\Core\Utilities\MathEx.cs" />
     <Compile Include="Converters\DeviceStateToStringConverter.cs" />
     <Compile Include="Core\SelectedItemToContentConverter.cs" />
     <Compile Include="Effects\ColoredQuadEffect.cs" />
@@ -268,6 +292,7 @@
     <Compile Include="Spectrum\Models\AnalyzerViewModel.cs" />
     <Compile Include="Spectrum\Models\FrequencyBin.cs" />
     <Compile Include="Spectrum\Models\FrequencyObserver.cs" />
+    <Compile Include="Spectrum\Models\LiveColorEvaluatorModel.cs" />
     <Compile Include="Spectrum\Models\SpectrumProvider.cs" />
     <Compile Include="ViewModel\AudioLoopbackViewModel.cs" />
     <Compile Include="ViewModel\Chromecast\ChromecastViewModel.cs" />
@@ -278,6 +303,7 @@
     <Compile Include="ViewModel\Hue\HueEndpointViewModel.cs" />
     <Compile Include="ViewModel\Hue\HueViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\RootViewModelBase.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\ChromecastActionsView.xaml.cs">
@@ -295,6 +321,30 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="ColorWheel\Controls\BrightnessSaturationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorWheel\Controls\ColorPinpoint.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorWheel\Controls\ColorWheelControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorWheel\Controls\SpectrumControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorWheel\Themes\Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColorWheel\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -354,6 +404,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ColorWheel\license\license.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -395,6 +446,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ColoredQuadShader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ColorWheel\Assets\Icons\rgb.png" />
+    <Resource Include="ColorWheel\Assets\Icons\ryb.png" />
+    <Resource Include="ColorWheel\Assets\Icons\rygb.png" />
+    <Resource Include="ColorWheel\Assets\Tiles\background.png" />
+    <Resource Include="ColorWheel\Core\Backgrounds\DarkABCTile.png" />
+    <Resource Include="ColorWheel\Core\Backgrounds\DarkLinenTile.png" />
+    <Resource Include="ColorWheel\Core\Backgrounds\LightABCTile.png" />
+    <Resource Include="ColorWheel\Core\Backgrounds\LightGrayTile.gif" />
+    <Resource Include="ColorWheel\Core\Backgrounds\LightLinenTile.png" />
+    <Resource Include="ColorWheel\Credits.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.3.2\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.2\build\Fody.targets')" />

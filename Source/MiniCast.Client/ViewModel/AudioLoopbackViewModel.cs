@@ -6,6 +6,7 @@ using SpectrumAnalyzer.Models;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +14,14 @@ using System.Windows;
 
 namespace MiniCast.Client.ViewModel
 {
-    public class AudioLoopbackViewModel : ViewModelBase
+    public class AudioLoopbackViewModel : RootViewModelBase
     {
         private LoopbackRecorder loopbackRecorder;
 
         public event Action<ArraySegment<byte>, WaveFormat> RecordingDataAvailable;
         public AnalyzerViewModel Analyzer { get; private set; }
+
+        public event Action<ObservableCollection<FrequencyBin>, double> BinsUpdated;
 
         public AudioLoopbackViewModel()
         {
@@ -44,6 +47,12 @@ namespace MiniCast.Client.ViewModel
             });
 
             Analyzer = new AnalyzerViewModel(loopbackRecorder.WaveFormat);
+            Analyzer.BinsUpdated += Analyzer_BinsUpdated;
+        }
+
+        private void Analyzer_BinsUpdated(ObservableCollection<FrequencyBin> bins, double maxValue)
+        {
+            BinsUpdated?.Invoke(bins, maxValue);
         }
 
         public override void Cleanup()

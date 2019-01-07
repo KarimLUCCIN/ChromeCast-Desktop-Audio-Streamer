@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace MiniCast.Client.ViewModel.Hue
 {
@@ -45,6 +46,8 @@ namespace MiniCast.Client.ViewModel.Hue
 
         private CancellationTokenSource globalEffectsCancelSource = new CancellationTokenSource();
         private EntertainmentLayer entertainmentLayer = null;
+
+        public bool IsTesting { get; private set; }
 
         public HueEndpointViewModel(HueEndpoint deviceInfo)
         {
@@ -103,6 +106,7 @@ namespace MiniCast.Client.ViewModel.Hue
                     ErrorMessage = string.Empty;
 
                     await LoadBridgeInfoAsync();
+                    await GetOrCreateEntertainmentLayerAsync();
 
                     IsConnected = true;
                 }
@@ -151,24 +155,46 @@ namespace MiniCast.Client.ViewModel.Hue
             return entertainmentLayer = stream.GetNewLayer(isBaseLayer: true);
         }
 
+        public void Update(Color currentColor)
+        {
+            if (IsConnected && !IsTesting && entertainmentLayer != null)
+            {
+                entertainmentLayer.SetState(CancellationToken.None, new RGBColor(currentColor.ScR, currentColor.ScG, currentColor.ScB), currentColor.ScA);
+            }
+        }
+
         public async Task TestAsync()
         {
-            var layer = await GetOrCreateEntertainmentLayerAsync();
-
-            if (layer == null)
+            if (IsTesting)
             {
                 return;
             }
 
-            for (int i = 0; i < 4; i++)
+            IsTesting = true;
+
+            try
             {
-                layer.SetState(CancellationToken.None, RandomColor(), .5, TimeSpan.FromSeconds(.5));
+                var layer = await GetOrCreateEntertainmentLayerAsync();
 
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                if (layer == null)
+                {
+                    return;
+                }
 
-                layer.SetState(CancellationToken.None, RandomColor(), 1, TimeSpan.FromSeconds(.5));
+                for (int i = 0; i < 4; i++)
+                {
+                    layer.SetState(CancellationToken.None, RandomColor(), .5, TimeSpan.FromSeconds(.5));
 
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+
+                    layer.SetState(CancellationToken.None, RandomColor(), 1, TimeSpan.FromSeconds(.5));
+
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                }
+            }
+            finally
+            {
+                IsTesting = false;
             }
         }
 
