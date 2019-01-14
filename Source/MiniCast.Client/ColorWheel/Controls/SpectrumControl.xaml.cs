@@ -162,8 +162,7 @@ namespace ColorWheel.Controls
             DrawPointers();
         }
 
-        private void UnsubscribeFromPalette(
-        )
+        private void UnsubscribeFromPalette()
         {
             Palette.PropertyChanged          -= OnPalettePropertyChanged;
             Palette.Colors.CollectionChanged -= ColorCollectionChanged;

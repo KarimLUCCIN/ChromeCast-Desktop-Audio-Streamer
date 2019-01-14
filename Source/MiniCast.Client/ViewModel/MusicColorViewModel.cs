@@ -1,6 +1,7 @@
 ﻿using Acr.Settings;
 using ColorWheel.Core;
 using GalaSoft.MvvmLight;
+using MiniCast.Client.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,7 @@ namespace MiniCast.Client.ViewModel
         public override bool HasGlobalSpectrum => false;
 
         public Palette ColorPalette { get; } = Palette.Create(new RGBColorWheel(), Colors.BlueViolet, PaletteSchemaType.Custom, 3);
+        public GradientSpan ColorGradient { get; } = new GradientSpan();
 
         public Color BaseColor => ColorPalette.Colors[0].RgbColor;
         public Color HighOctavesColor => ColorPalette.Colors[1].RgbColor;
@@ -29,6 +31,10 @@ namespace MiniCast.Client.ViewModel
 
         public MusicColorViewModel()
         {
+            ColorGradient.Stops.Add(new GradientStop() { Color = Color.FromRgb(255, 0, 0), Offset = .2 });
+            ColorGradient.Stops.Add(new GradientStop() { Color = Color.FromRgb(255, 255, 0), Offset = .4 });
+            ColorGradient.Stops.Add(new GradientStop() { Color = Color.FromRgb(255, 0, 255), Offset = .7 });
+
             ColorPalette.Colors[0].Name = "Base Color";
             ColorPalette.Colors[0].RgbColor = LoadColor(nameof(BaseColor), BaseColor);
             ColorPalette.Colors[0].PropertyChanged += (_, __) => RaisePropertyChanged(nameof(BaseColor));

@@ -277,9 +277,17 @@
     <Compile Include="ColorWheel\Core\ThemeSupport\ColorTemplate.cs" />
     <Compile Include="ColorWheel\Core\Utilities\DynamicObject.cs" />
     <Compile Include="ColorWheel\Core\Utilities\MathEx.cs" />
+    <Compile Include="Controls\ColorGrid.xaml.cs">
+      <DependentUpon>ColorGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GradientSpan.cs" />
+    <Compile Include="Controls\GradientStopPinpoint.xaml.cs">
+      <DependentUpon>GradientStopPinpoint.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\DeviceStateToStringConverter.cs" />
     <Compile Include="Core\SelectedItemToContentConverter.cs" />
     <Compile Include="Effects\ColoredQuadEffect.cs" />
+    <Compile Include="Helpers\GridHelpers.cs" />
     <Compile Include="Spectrum\Controls\AudioLine.xaml.cs">
       <DependentUpon>AudioLine.xaml</DependentUpon>
     </Compile>
@@ -342,6 +350,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ColorWheel\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ColorGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\GradientStopPinpoint.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

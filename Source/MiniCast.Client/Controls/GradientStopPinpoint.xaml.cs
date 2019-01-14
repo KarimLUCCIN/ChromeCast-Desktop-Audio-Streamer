@@ -36,20 +36,20 @@ namespace ColorWheel.Controls
     using System.Windows.Shapes;
     using System.Windows.Data;
 
-    public partial class ColorPinpoint: UserControl, INotifyPropertyChanged
+    public partial class GradientStopPinpoint: UserControl, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler        PropertyChanged;
         private Color                                   m_color = Colors.Transparent;
         private bool                                    m_isMain = false;
-        private PaletteColor                            m_pc = new PaletteColor();
+        private GradientStop                            m_pc = new GradientStop();
 
-        public ColorPinpoint()
+        public GradientStopPinpoint()
         {
             InitializeComponent();
             DataContext = this;
         }
 
-        public PaletteColor PaletteColor
+        public GradientStop PaletteColor
         {
             get
             {
@@ -126,23 +126,5 @@ namespace ColorWheel.Controls
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
             }
         }
-    }
-
-    public class IsSelectedThickness: IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value == null || !(value is bool))
-            {
-                return 1;
-            }
-            return (double) (((bool) value) ? 2.0 : 1.0);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
