@@ -26,59 +26,24 @@ namespace MiniCast.Client.Controls
     {
         private GradientStopPinpoint[] m_samplesb = null;
 
-        public event Handler<int> SelectColored;
-        public event EventHandler ColorsUpdated;
-
         public ColorGrid()
         {
             InitializeComponent();
 
-            this.Loaded += (s, e) => Draw();
             this.SizeChanged += (s, e) =>
             {
-                Draw();
                 DrawPointers();
             };
         }
 
-        #region Saturation dependency property
-
-        public static readonly DependencyProperty SaturationProperty =
-           DependencyProperty.Register("Saturation", typeof(double), typeof(ColorGrid),
-           new PropertyMetadata(1.0, new PropertyChangedCallback(OnSaturationChanged)));
-
-        public double Saturation
+        public GradientStop CurrentStop
         {
-            get
-            {
-                return (double)GetValue(SaturationProperty);
-            }
-            set
-            {
-                SetValue(SaturationProperty, value);
-            }
+            get { return (GradientStop)GetValue(CurrentStopProperty); }
+            set { SetValue(CurrentStopProperty, value); }
         }
 
-        public static void OnSaturationChanged(
-            DependencyObject source,
-            DependencyPropertyChangedEventArgs e
-        )
-        {
-            ColorGrid me;
-            double value;
-
-            me = source as ColorGrid;
-            value = (double)e.NewValue;
-
-            if (e.OldValue != e.NewValue)
-            {
-                me.Draw();
-                me.DrawPointers();
-            }
-        }
-
-
-        #endregion
+        public static readonly DependencyProperty CurrentStopProperty =
+            DependencyProperty.Register("CurrentStop", typeof(GradientStop), typeof(ColorGrid), new PropertyMetadata(null));
 
         #region Palette property
 
@@ -122,6 +87,13 @@ namespace MiniCast.Client.Controls
             if (Gradient != null)
             {
                 Gradient.GradientChanged += Gradient_GradientChanged;
+
+                StartPin.PaletteColor = Gradient.Start;
+                StartPin.CurrentColor = Gradient.Start.Color;
+
+                EndPin.PaletteColor = Gradient.End;
+                EndPin.CurrentColor = Gradient.End.Color;
+
                 Gradient_GradientChanged(Gradient);
             }
         }
@@ -135,7 +107,7 @@ namespace MiniCast.Client.Controls
             {
                 foreach (var stop in src.OrderedStops)
                 {
-                    canvasBrush.GradientStops.Add(new GradientStop(stop.color, stop.offset));
+                    canvasBrush.GradientStops.Add(stop);
                 }
             }
         }
@@ -152,41 +124,12 @@ namespace MiniCast.Client.Controls
 
         #endregion
 
-        public void Draw()
-        {
-            //            AHSL hsl;
-            //            int width = (int)imgBorder.ActualWidth;
-            //            int height = (int)imgBorder.ActualHeight;
-            //#if !SILVERLIGHT
-            //            int[] pixels = new int[width * height];
-            //#endif
-            //            var bitmap = Compat.CreateBitmap(width, height);
-
-            //            for (int x = 0; x < width; ++x)
-            //            {
-            //                for (int y = 0; y < height; ++y)
-            //                {
-            //                    hsl = new AHSL(x / (width / 360.0), Saturation, 1.0 - (((double)y) / height), 1.0);
-            //#if !SILVERLIGHT
-            //                    pixels[y * width + x] = hsl.Double().ToARGB32();
-            //#else
-            //                    bitmap.Pixels[y * width + x] = hsl.Double().ToARGB32();
-            //#endif
-            //                }
-            //            }
-            //#if !SILVERLIGHT
-            //            bitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, Compat.GetBitmapStride(width), 0);
-            //#endif
-            //            spectrum.Height = height;
-            //            spectrum.Width = width;
-
-            //            spectrum.Source = bitmap;
-        }
-
         private static double NormalizeOffset(double offset)
         {
             return Math.Max(0.01f, Math.Min(.96f, offset));
         }
+
+        const int radius = 16;
 
         /// 
         /// <summary>
@@ -209,6 +152,7 @@ namespace MiniCast.Client.Controls
                     if (m_samplesb != null)
                     {
                         canvasSpectrum.Children.Clear();
+                        CurrentStop = null;
                     }
 
                     m_samplesb = new GradientStopPinpoint[stops.Length];
@@ -231,41 +175,14 @@ namespace MiniCast.Client.Controls
                         SetPointEvents(m_samplesb[i]);
 
                         m_samplesb[i].SetValue(Canvas.LeftProperty, width * stops[i].Offset);
-                        m_samplesb[i].SetValue(Canvas.TopProperty, height / 2);
+                        m_samplesb[i].SetValue(Canvas.TopProperty, height / 2 - radius / 2);
                     }
                 }
 
                 for (int i = 0; i < m_samplesb.Length; ++i)
                 {
                     m_samplesb[i].SetValue(Canvas.LeftProperty, width * stops[i].Offset);
-                    m_samplesb[i].SetValue(Canvas.TopProperty, height / 2);
-                    //var x = (double)m_samplesb[i].GetValue(Canvas.LeftProperty);
-                    //var y = (double)m_samplesb[i].GetValue(Canvas.LeftProperty);
-
-                    //hsl = p.Colors[i].DoubleColor.ToAHSL();
-
-                    //double x;
-                    //double y = height * (1 - hsl.Luminance);
-
-                    //if (hsl.Luminance == 0 || hsl.Luminance == 1)
-                    //{
-                    //    x = (double)m_samplesb[i].GetValue(Canvas.LeftProperty);
-                    //}
-                    //else
-                    //{
-                    //    x = (width / 360.0) * hsl.HueDegree;
-                    //}
-
-                    //m_samplesb[i].CurrentColor = p.Colors[i].DoubleColor.ToColor();
-
-                    //x -= diam / 2;
-                    //y -= diam / 2;
-
-                    //if (!colorOnly)
-                    //{
-                    //    m_samplesb[i].SetValue(Canvas.LeftProperty, x);
-                    //    m_samplesb[i].SetValue(Canvas.TopProperty, y);
-                    //}
+                    m_samplesb[i].SetValue(Canvas.TopProperty, height / 2 - radius / 2);
                 }
             }
         }
@@ -274,18 +191,20 @@ namespace MiniCast.Client.Controls
 
         private void SelectColor(GradientStopPinpoint pp)
         {
-            //for (int i = 0; i < Gradient.Colors.Count; ++i)
-            //{
-            //    Gradient.Colors[i].IsSelected = (pp == m_samplesb[i]);
-            //}
+            CurrentStop = pp.PaletteColor;
+        }
 
-            //if (SelectColored != null)
-            //{
-            //    SelectColored(this, new EventArg<int>()
-            //    {
-            //        Value = (int)pp.Tag
-            //    });
-            //}
+        private void CanvasSpectrum_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                var mousePos = e.GetPosition(canvasSpectrum);
+
+                double width = canvasSpectrum.ActualWidth;
+                var newOffset = mousePos.X / width;
+
+                Gradient.Stops.Add(new GradientStop(new Color() { A = 1, R = 0, G = 0, B = 0 }, newOffset));
+            }
         }
 
         private void SetPointEvents(
@@ -295,6 +214,14 @@ namespace MiniCast.Client.Controls
             var drag = false;
             Point shift = new Point();
 
+            e.MouseRightButtonDown += (s, ev) =>
+            {
+                var pinpoint = (GradientStopPinpoint)s;
+                Gradient.Stops.Remove(pinpoint.PaletteColor);
+
+                CurrentStop = null;
+            };
+
             e.MouseLeftButtonDown += (s, ev) =>
             {
                 drag = true;
@@ -303,26 +230,12 @@ namespace MiniCast.Client.Controls
                 //selected = Gradient.Colors[(int)(s as FrameworkElement).Tag];
                 e.CaptureMouse();
 
-                var pinpoint = (GradientStopPinpoint)s;
-                foreach (var pin in m_samplesb)
-                {
-                    if (pinpoint != pin)
-                    {
-                        pin.IsHitTestVisible = false;
-                    }
-                }
-
             };
 
             e.MouseLeftButtonUp += (s, ev) =>
             {
                 drag = false;
                 e.ReleaseMouseCapture();
-
-                foreach (var pin in m_samplesb)
-                {
-                    pin.IsHitTestVisible = true;
-                }
 
                 bool outOfOrder = false;
                 for (int i = 0; i < m_samplesb.Length - 1; i++)
@@ -341,7 +254,7 @@ namespace MiniCast.Client.Controls
                     for (int i = 0; i < m_samplesb.Length; i++)
                     {
                         m_samplesb[i].PaletteColor = interiorColors[i];
-                        m_samplesb[i].PaletteColor = interiorColors[i];
+                        m_samplesb[i].CurrentColor = interiorColors[i].Color;
                     }
                 }
             };
@@ -360,11 +273,6 @@ namespace MiniCast.Client.Controls
 
                     var pinpoint = (GradientStopPinpoint)s;
 
-                    if (!pinpoint.IsHitTestVisible)
-                    {
-                        return;
-                    }
-
                     double diam = pinpoint.ActualWidth;
 
                     if (width <= 0)
@@ -378,36 +286,6 @@ namespace MiniCast.Client.Controls
 
                     var newOffset = p.X / width;
                     pinpoint.PaletteColor.Offset = NormalizeOffset(newOffset);
-
-                    //if (outOfOrder)
-                    //{
-                    //    var interiorColors = Gradient.InteriorStops.ToArray();
-
-                    //    for (int i = 0; i < m_samplesb.Length; i++)
-                    //    {
-                    //        m_samplesb[i].PaletteColor = interiorColors[i];
-                    //        m_samplesb[i].CurrentColor = interiorColors[i].Color;
-                    //    }
-                    //}
-
-                    //AHSL hsl = selected.DoubleColor.ToAHSL();
-
-                    //double x = Math.Min(Math.Max(p.X, 0), width);
-                    //double y = Math.Min(Math.Max(p.Y, 0), height);
-
-                    //hsl.Luminance = 1 - (y / height);
-                    //hsl.HueDegree = 360 * (x / width);
-                    //hsl.Saturation = Saturation;
-
-                    //if (prev != null)
-                    //{
-                    //    selected.DoubleColor = hsl.Double();
-                    //    if (ColorsUpdated != null)
-                    //    {
-                    //        ColorsUpdated(this, EventArgs.Empty);
-                    //    }
-                    //}
-                    //prev = p;
                 }
             };
         }

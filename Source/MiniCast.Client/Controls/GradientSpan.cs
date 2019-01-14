@@ -12,8 +12,8 @@ namespace MiniCast.Client.Controls
 {
     public class GradientSpan : ViewModelBase, INotifyPropertyChanged
     {
-        public Color Start { get; set; } = new Color() { ScA = 1, ScR = 0, ScG = 0, ScB = 0 };
-        public Color End { get; set; } = new Color() { ScA = 1, ScR = 1, ScG = 1, ScB = 1 };
+        public GradientStop Start { get; set; } = new GradientStop(new Color() { ScA = 1, ScR = 0, ScG = 0, ScB = 0 }, 0);
+        public GradientStop End { get; set; } = new GradientStop(new Color() { ScA = 1, ScR = 1, ScG = 1, ScB = 1 }, 1);
 
         public GradientStopCollection Stops { get; } = new GradientStopCollection();
 
@@ -26,18 +26,18 @@ namespace MiniCast.Client.Controls
             Stops.Changed += Stops_Changed;
         }
 
-        public IEnumerable<(Color color, double offset)> OrderedStops
+        public IEnumerable<GradientStop> OrderedStops
         {
             get
             {
-                yield return (Start, 0);
+                yield return Start;
 
                 foreach (var stop in Stops.OrderBy(s => s.Offset))
                 {
-                    yield return (stop.Color, stop.Offset);
+                    yield return stop;
                 }
 
-                yield return (End, 0);
+                yield return End;
             }
         }
 
