@@ -1,5 +1,6 @@
 ﻿using ColorWheel.Controls;
 using ColorWheel.Core;
+using MiniCast.Client.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -103,11 +104,20 @@ namespace MiniCast.Client.Controls
             DrawPointers();
 
             canvasBrush.GradientStops.Clear();
+            intensityBrush.GradientStops.Clear();
             if (src != null)
             {
                 foreach (var stop in src.OrderedStops)
                 {
                     canvasBrush.GradientStops.Add(stop);
+
+                    var newIntensityStop = new GradientStop(ColorHelpers.IntensityColor(stop.Color.ScA), stop.Offset);
+                    stop.Changed += delegate
+                    {
+                        newIntensityStop.Color = ColorHelpers.IntensityColor(stop.Color.ScA);
+                    };
+
+                    intensityBrush.GradientStops.Add(newIntensityStop);
                 }
             }
         }
@@ -137,11 +147,10 @@ namespace MiniCast.Client.Controls
         /// 
         public void DrawPointers(bool colorOnly = false)
         {
-            double width = imgBorder.ActualWidth;
-            double height = imgBorder.ActualHeight;
+            double width = canvasSpectrum.ActualWidth;
+            double height = canvasSpectrum.ActualHeight;
             var p = Gradient;
             double diam = 16;
-            //AHSL hsl;
 
             if (Gradient != null)
             {
@@ -203,7 +212,7 @@ namespace MiniCast.Client.Controls
                 double width = canvasSpectrum.ActualWidth;
                 var newOffset = mousePos.X / width;
 
-                Gradient.Stops.Add(new GradientStop(new Color() { A = 1, R = 0, G = 0, B = 0 }, newOffset));
+                Gradient.Stops.Add(new GradientStop(new Color() { A = 255, R = 0, G = 0, B = 0 }, newOffset));
             }
         }
 
@@ -291,5 +300,15 @@ namespace MiniCast.Client.Controls
         }
 
         #endregion
+
+        private void EndPin_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CurrentStop = Gradient.End;
+        }
+
+        private void StartPin_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CurrentStop = Gradient.Start;
+        }
     }
 }

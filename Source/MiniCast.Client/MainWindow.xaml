@@ -102,7 +102,7 @@
             <views:ChromecastActionsView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
         </Grid>
 
-        <audiocontrols:AudioSpectrum Grid.ColumnSpan="2" VerticalAlignment="Bottom" Height="256" IsHitTestVisible="False"
+        <audiocontrols:AudioSpectrum Grid.ColumnSpan="2" HorizontalAlignment="Right" MaxWidth="600" VerticalAlignment="Bottom" Height="256" IsHitTestVisible="False"
                                      Opacity=".5" ForegroundPitched="AliceBlue" PitchColor="True"
                                      RenderTransformOrigin="0.5,0.5" Visibility="{Binding SelectedItem.Tag.HasGlobalSpectrum, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=HamburgerMenuControl}">
             <audiocontrols:AudioSpectrum.RenderTransform>

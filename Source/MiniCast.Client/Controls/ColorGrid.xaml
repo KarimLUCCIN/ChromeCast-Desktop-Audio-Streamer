@@ -12,14 +12,10 @@
         VerticalAlignment="Stretch"
         x:Name="LayoutRoot">
 
-        <Border
-            x:Name="imgBorder"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            BorderBrush="White"
-            BorderThickness="2">
-
-        </Border>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="8"/>
+        </Grid.RowDefinitions>
 
         <Canvas x:Name="canvasSpectrum" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MouseDown="CanvasSpectrum_MouseDown">
             <Canvas.Background>
@@ -27,8 +23,13 @@
             </Canvas.Background>
         </Canvas>
 
-        <wheel:GradientStopPinpoint x:Name="StartPin" Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <wheel:GradientStopPinpoint x:Name="EndPin" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <wheel:GradientStopPinpoint Cursor="Hand" MouseDown="StartPin_MouseDown"  x:Name="StartPin" Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <wheel:GradientStopPinpoint Cursor="Hand" MouseDown="EndPin_MouseDown"  x:Name="EndPin" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
+        <Canvas Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Canvas.Background>
+                <LinearGradientBrush x:Name="intensityBrush" EndPoint="1,0"/>
+            </Canvas.Background>
+        </Canvas>
     </Grid>
 </UserControl>

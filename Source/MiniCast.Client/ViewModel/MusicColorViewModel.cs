@@ -19,38 +19,58 @@ namespace MiniCast.Client.ViewModel
     {
         public override bool HasGlobalSpectrum => false;
 
-        public Palette ColorPalette { get; } = Palette.Create(new RGBColorWheel(), Colors.BlueViolet, PaletteSchemaType.Custom, 3);
         public GradientSpan ColorGradient { get; } = new GradientSpan();
 
-        public Color BaseColor => ColorPalette.Colors[0].RgbColor;
-        public Color HighOctavesColor => ColorPalette.Colors[1].RgbColor;
-        public Color LowOctavesColor => ColorPalette.Colors[2].RgbColor;
+        public Color BaseColor { get; set; }
 
         private DispatcherTimer saveTimer;
         private bool colorsDirty = false;
 
         public MusicColorViewModel()
         {
-            ColorGradient.Stops.Add(new GradientStop() { Color = Color.FromRgb(255, 0, 0), Offset = .2 });
-            ColorGradient.Stops.Add(new GradientStop() { Color = Color.FromRgb(255, 255, 0), Offset = .4 });
-            ColorGradient.Stops.Add(new GradientStop() { Color = Color.FromRgb(255, 0, 255), Offset = .7 });
+            BaseColor = LoadColor(nameof(BaseColor), Color.FromRgb(100, 200, 0));
 
-            ColorPalette.Colors[0].Name = "Base Color";
-            ColorPalette.Colors[0].RgbColor = LoadColor(nameof(BaseColor), BaseColor);
-            ColorPalette.Colors[0].PropertyChanged += (_, __) => RaisePropertyChanged(nameof(BaseColor));
+            LoadGradient();
 
-            ColorPalette.Colors[1].Name = "High Octaves";
-            ColorPalette.Colors[1].RgbColor = LoadColor(nameof(HighOctavesColor), HighOctavesColor);
-            ColorPalette.Colors[1].PropertyChanged += (_, __) => RaisePropertyChanged(nameof(HighOctavesColor));
-
-            ColorPalette.Colors[2].Name = "Low Octaves";
-            ColorPalette.Colors[2].RgbColor = LoadColor(nameof(LowOctavesColor), LowOctavesColor);
-            ColorPalette.Colors[2].PropertyChanged += (_, __) => RaisePropertyChanged(nameof(LowOctavesColor));
+            ColorGradient.GradientChanged += ColorGradient_GradientChanged;
 
             saveTimer = new DispatcherTimer(DispatcherPriority.Normal);
             saveTimer.Interval = TimeSpan.FromSeconds(1);
             saveTimer.Tick += SaveTimer_Tick;
             saveTimer.Start();
+        }
+
+        private void ColorGradient_GradientChanged(GradientSpan obj)
+        {
+            colorsDirty = true;
+        }
+
+        private void LoadGradient()
+        {
+            ColorGradient.Start = new GradientStop(LoadColor("Start", Color.FromRgb(0, 0, 0)), 0);
+            ColorGradient.End = new GradientStop(LoadColor("End", Color.FromRgb(255, 255, 255)), 1);
+
+            int count = CrossSettings.Current.Get<int>("MusicColor.GradientSize", 0);
+            for (int i = 0; i < count; i++)
+            {
+                float offset = CrossSettings.Current.Get<float>($"MusicColor.Color{i}.Offset", 0);
+                ColorGradient.Stops.Add(new GradientStop(LoadColor($"Color{i}", Color.FromRgb(0, 0, 0)), offset));
+            }
+        }
+
+        private void SaveGradient()
+        {
+            SaveColor("Start", ColorGradient.Start.Color);
+            SaveColor("End", ColorGradient.End.Color);
+
+            var interior = ColorGradient.InteriorStops.ToArray();
+            CrossSettings.Current.Set("MusicColor.GradientSize", interior.Length);
+            for (int i = 0; i < interior.Length; i++)
+            {
+                var stop = interior[i];
+                CrossSettings.Current.Set($"MusicColor.Color{i}.Offset", stop.Offset);
+                SaveColor($"Color{i}", stop.Color);
+            }
         }
 
         private void SaveTimer_Tick(object sender, EventArgs e)
@@ -60,8 +80,7 @@ namespace MiniCast.Client.ViewModel
                 colorsDirty = false;
 
                 SaveColor(nameof(BaseColor), BaseColor);
-                SaveColor(nameof(HighOctavesColor), HighOctavesColor);
-                SaveColor(nameof(LowOctavesColor), LowOctavesColor);
+                SaveGradient();
             }
         }
 

@@ -8,6 +8,7 @@
              xmlns:colorcontrols="clr-namespace:ColorWheel.Controls"
              xmlns:audiocontrols="clr-namespace:SpectrumAnalyzer.Controls"
              xmlns:localcontrols="clr-namespace:MiniCast.Client.Controls" 
+             xmlns:toolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              DataContext="{Binding MusicColor, Source={StaticResource Locator}}">
@@ -31,9 +32,32 @@
                     <effects:ColoredQuadEffect BaseColor="{Binding BaseColor}" HighOctavesColor="{Binding HighOctavesColor}" LowOctavesColor="{Binding LowOctavesColor}"/>
                 </Rectangle.Effect>
             </Rectangle>
-        </Grid>
+        </Grid>-->
 
-        <audiocontrols:AudioSpectrum Margin="5" Grid.Row="1" VerticalAlignment="Bottom" Height="128" IsHitTestVisible="False"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="256"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Margin="5">
+            <TextBlock Text="Live Color (With Chromecast Delay)"/>
+            <Rectangle Height="16">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="{Binding LiveColor.CurrentColor, Source={StaticResource Locator}}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5">
+            <TextBlock Text="Base Color"/>
+            <toolkit:ColorPicker Background="Transparent" SelectedColor="{Binding BaseColor}"/>
+        </StackPanel>
+
+        <localcontrols:ColorGrid Grid.Row="2" x:Name="colorGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Gradient="{Binding ColorGradient}"/>
+
+        <audiocontrols:AudioSpectrum Grid.Row="2" Margin="0,0,0,4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsHitTestVisible="False"
                                      Opacity=".5" ForegroundPitched="AliceBlue" PitchColor="True"
                                      RenderTransformOrigin="0.5,0.5">
             <audiocontrols:AudioSpectrum.RenderTransform>
@@ -41,15 +65,8 @@
             </audiocontrols:AudioSpectrum.RenderTransform>
         </audiocontrols:AudioSpectrum>
 
-        <StackPanel Orientation="Vertical" Grid.Row="2" Margin="5">
-            <TextBlock Text="Live Color (With Chromecast Delay)"/>
-            <Rectangle Height="16">
-                <Rectangle.Fill>
-                    <SolidColorBrush Color="{Binding LiveColor.CurrentColor, Source={StaticResource Locator}}"/>
-                </Rectangle.Fill>
-            </Rectangle>
-        </StackPanel>-->
-
-        <localcontrols:ColorGrid Gradient="{Binding ColorGradient}"/>
+        <ScrollViewer Grid.Row="3">
+            <toolkit:ColorCanvas Background="Transparent" Foreground="White" SelectedColor="{Binding Path=CurrentStop.Color, ElementName=colorGrid}"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>

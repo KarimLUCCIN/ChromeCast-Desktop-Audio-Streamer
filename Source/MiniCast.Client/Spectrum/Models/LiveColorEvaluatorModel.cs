@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using MiniCast.Client.Helpers;
 using MiniCast.Client.ViewModel;
 using SpectrumAnalyzer.Models;
 using System;
@@ -39,17 +40,52 @@ namespace MiniCast.Client.Spectrum.Models
             var baseColor = new Vector4(MusicColor.BaseColor.ScR, MusicColor.BaseColor.ScG, MusicColor.BaseColor.ScB, 1.0f);
             var totalColor = Vector4.Zero; // who cares about double precision?
 
-            var lowColor = new Vector4(MusicColor.LowOctavesColor.ScR, MusicColor.LowOctavesColor.ScG, MusicColor.LowOctavesColor.ScB, 1.0f);
-            var highColor = new Vector4(MusicColor.HighOctavesColor.ScR, MusicColor.HighOctavesColor.ScG, MusicColor.HighOctavesColor.ScB, 1.0f);
+            var gradients = MusicColor.ColorGradient.OrderedStops.ToArray();
+            int gradientIndex = 0;
 
-            int count = bins.Count;
-            for (int i = 0; i < count; i++)
+            if (gradients.Length > 1)
             {
-                var lerpedColor = Vector4.Lerp(lowColor, highColor, (i / (float)(count - 1)));
-                totalColor += Vector4.Lerp(baseColor, lerpedColor, (float)(bins[i].Value / maxValue));
+                int count = bins.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    float currentOffset = (i / (float)(count - 1));
+
+                    Color stopColor;
+
+                    while (true)
+                    {
+                        float currentGradientStart = gradientIndex / (float)(gradients.Length - 1);
+                        float currentGradientStop = (gradientIndex + 1) / (float)(gradients.Length - 1);
+
+                        if (currentOffset >= 1 || currentGradientStart >= 1 || gradientIndex >= gradients.Length - 2)
+                        {
+                            stopColor = gradients.Last().Color;
+                            break;
+                        }
+                        else
+                        {
+                            if (currentOffset >= currentGradientStart && currentOffset <= currentGradientStop)
+                            {
+                                float subOffset = (currentGradientStop - currentOffset) / (currentGradientStop - currentGradientStart);
+                                stopColor = ColorHelpers.Lerp(gradients[gradientIndex].Color, gradients[gradientIndex + 1].Color, subOffset);
+                                break;
+                            }
+                            else
+                            {
+                                gradientIndex++;
+                            }
+                        }
+                    }
+
+                    Vector4 colorVec = new Vector4(stopColor.ScR, stopColor.ScG, stopColor.ScB, 1.0f);
+
+                    float binAmount = (float)(bins[bins.Count - i - 1].Value / maxValue);
+
+                    totalColor += colorVec * 16 * stopColor.ScA * binAmount;
+                }
             }
 
-            var finalColor = totalColor / bins.Count;
+            var finalColor = baseColor + totalColor / bins.Count;
 
             CurrentColor = new Color() { ScR = finalColor.X, ScG = finalColor.Y, ScB = finalColor.Z, ScA = 1.0f };
             CurrentColorVersion++;

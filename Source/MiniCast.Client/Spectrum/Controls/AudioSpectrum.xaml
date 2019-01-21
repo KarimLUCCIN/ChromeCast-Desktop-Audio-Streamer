@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:SpectrumAnalyzer.Controls"
              mc:Ignorable="d"
-             VerticalAlignment="Stretch"
+             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
              DataContext="{Binding LoopbackRecorder.Analyzer, Source={StaticResource Locator}}">
     <ItemsControl x:Name="Spectrum"
                 ItemsSource="{Binding FrequencyBins}">

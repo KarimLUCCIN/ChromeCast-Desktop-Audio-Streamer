@@ -398,7 +398,27 @@ namespace SpectrumAnalyzer.Models
                     Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                     {
                         var index = 0;
-                        foreach (var frequencyBin in FrequencyBins) frequencyBin.Value = frequencyBins[index++];
+                        foreach (var frequencyBin in FrequencyBins)
+                        {
+                            var oldFreq = frequencyBin.Value;
+                            var newFreq = frequencyBins[index++];
+                            var finalFreq = newFreq;
+
+                            if (oldFreq > newFreq)
+                            {
+                                const float smooth = .95f;
+                                finalFreq = smooth * oldFreq + (1 - smooth) * newFreq;
+                            }
+
+                            double dist = Math.Abs(newFreq - oldFreq);
+                            if (dist < .1)
+                            {
+                                const float smooth = .99f;
+                                finalFreq = smooth * oldFreq + (1 - smooth) * newFreq;
+                            }
+
+                            frequencyBin.Value = finalFreq;
+                        }
 
                         BinsUpdated?.Invoke(FrequencyBins, actualMaxValue);
                     }));
