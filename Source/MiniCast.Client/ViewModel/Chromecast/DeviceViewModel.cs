@@ -41,6 +41,10 @@ namespace MiniCast.Client.ViewModel.Chromecast
         public RelayCommand StopCommand { get; private set; }
         public RelayCommand PauseCommand { get; private set; }
 
+        public TimeSpan AudioDelay { get; private set; }
+
+        private Stopwatch playWatch = new Stopwatch();
+
         public DeviceViewModel(DiscoveredSsdpDevice discoveredDevice, SsdpDevice device)
         {
             this.discoveredDevice = discoveredDevice ?? throw new ArgumentNullException(nameof(discoveredDevice));
@@ -59,10 +63,19 @@ namespace MiniCast.Client.ViewModel.Chromecast
             var syncContext = SynchronizationContext.Current;
             deviceCommunication.StateChanged += (EndpointCommunication com, DeviceState newState) =>
             {
-                syncContext.Post((_) => {
+                syncContext.Post((_) =>
+                {
                     State = newState;
 
                     UpdateCommandStatus();
+                }, null);
+            };
+
+            deviceCommunication.PlayingTimeChanged += delegate
+            {
+                syncContext.Post((_) =>
+                {
+                    AudioDelay = TimeSpan.FromSeconds(Math.Max(0, (playWatch.Elapsed - deviceCommunication.PlayingTime).TotalSeconds));
                 }, null);
             };
         }
@@ -77,6 +90,7 @@ namespace MiniCast.Client.ViewModel.Chromecast
         public async Task SendRecordingDataAsync(ArraySegment<byte> dataToSend, WaveFormat format)
         {
             await deviceConnection.SendRecordingDataAsync(dataToSend, format);
+            await deviceCommunication.GetMediaStatusAsync();
         }
 
         public async Task ConnectRecordingDataAsync(Socket socket)
@@ -138,8 +152,6 @@ namespace MiniCast.Client.ViewModel.Chromecast
                     break;
             }
 
-            Debug.WriteLine($"{CanPlay} {CanPause} {CanStop}");
-
             PlayCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
             PauseCommand.RaiseCanExecuteChanged();
@@ -157,12 +169,17 @@ namespace MiniCast.Client.ViewModel.Chromecast
                 case DeviceState.InvalidRequest:
                 case DeviceState.Closed:
                 default:
-                    await deviceCommunication.LaunchAndLoadMediaAsync();
+                    await deviceCommunication.LaunchAsync(() =>
+                    {
+                        playWatch.Restart();
+                    });
+                    await deviceCommunication.LoadMediaMessageAsync();
                     break;
                 case DeviceState.Idle:
                 case DeviceState.LaunchedApplication:
                 case DeviceState.Paused:
-                    await deviceCommunication.LoadMediaAsync();
+                    await deviceCommunication.LoadMediaMessageAsync();
+                    playWatch.Restart();
                     break;
                 case DeviceState.LaunchingApplication:
                 case DeviceState.LoadingMedia:
@@ -184,7 +201,7 @@ namespace MiniCast.Client.ViewModel.Chromecast
 
         private async void PauseAsync()
         {
-            await deviceCommunication.PauseMediaAsync();
+            await deviceCommunication.PauseMediaMessageAsync();
 
             UpdateCommandStatus();
         }

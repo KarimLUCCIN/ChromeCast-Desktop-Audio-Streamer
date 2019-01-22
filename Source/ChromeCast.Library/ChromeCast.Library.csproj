@@ -79,7 +79,6 @@
     <Compile Include="Classes\NetworkAdapter.cs" />
     <Compile Include="Communication\ChromeCastMessages.cs" />
     <Compile Include="Communication\Classes\ChromeCastClasses.cs" />
-    <Compile Include="Communication\DeviceCommunication.cs" />
     <Compile Include="Communication\DeviceConnection.cs" />
     <Compile Include="Communication\DeviceConnectionState.cs" />
     <Compile Include="Communication\DeviceReceiveBuffer.cs" />

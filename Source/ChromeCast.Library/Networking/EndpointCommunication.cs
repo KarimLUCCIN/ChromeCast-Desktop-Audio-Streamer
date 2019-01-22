@@ -65,7 +65,7 @@ namespace ChromeCast.Library.Networking
                 if (value != currentVolume)
                 {
                     currentVolume = value;
-                    SetVolumeAsync(value).Forget();
+                    SetVolumeMessageAsync(value).Forget();
                 }
             }
         }
@@ -88,15 +88,14 @@ namespace ChromeCast.Library.Networking
             }
         }
 
-        public async Task<bool> LaunchAndLoadMediaAsync()
+        public async Task<bool> LaunchAsync(Action connectedCallback = null)
         {
             DeviceState = DeviceState.LaunchingApplication;
             await ConnectAsync();
 
             if (connection.ConnectionState == DeviceConnectionState.Connected)
             {
-                await LaunchAsync();
-                await LoadMediaAsync();
+                await LaunchMessageAsyncM();
 
                 chromeCastDestination = "";
 
@@ -119,8 +118,7 @@ namespace ChromeCast.Library.Networking
                 }
 
                 DeviceState = DeviceState.LaunchedApplication;
-                await ConnectAsync(chromeCastSource, chromeCastDestination);
-                await LoadMediaAsync();
+                await ConnectAsync(chromeCastSource, chromeCastDestination, connectedCallback);
 
                 return true;
             }
@@ -135,29 +133,29 @@ namespace ChromeCast.Library.Networking
             return ++requestId;
         }
 
-        public async Task LaunchAsync()
+        public async Task LaunchMessageAsyncM()
         {
             await SendMessageAsync(ChromeCastMessages.GetLaunchMessage(GetNextRequestId()));
         }
 
-        public async Task LoadMediaAsync()
+        public async Task LoadMediaMessageAsync()
         {
             DeviceState = DeviceState.LoadingMedia;
             await SendMessageAsync(ChromeCastMessages.GetLoadMessage(streamingUrl, chromeCastSource, chromeCastDestination));
         }
 
-        public async Task PauseMediaAsync()
+        public async Task PauseMediaMessageAsync()
         {
             DeviceState = DeviceState.Paused;
             await SendMessageAsync(ChromeCastMessages.GetPauseMessage(chromeCastApplicationSessionNr, chromeCastMediaSessionId, GetNextRequestId(), chromeCastSource, chromeCastDestination));
         }
 
-        public async Task SetVolumeAsync(Volume newVolume)
+        public async Task SetVolumeMessageAsync(Volume newVolume)
         {
             await SendMessageAsync(ChromeCastMessages.GetVolumeSetMessage(newVolume, GetNextRequestId()));
         }
 
-        public async Task VolumeMuteAsync(bool muted)
+        public async Task VolumeMuteMessageAsync(bool muted)
         {
             if (connection.ConnectionState == DeviceConnectionState.Connected)
             {
@@ -175,6 +173,8 @@ namespace ChromeCast.Library.Networking
             await SendMessageAsync(ChromeCastMessages.GetReceiverStatusMessage(GetNextRequestId()));
         }
 
+        Dictionary<int, Stopwatch> mediaStatusRequests = new Dictionary<int, Stopwatch>();
+
         public async Task GetMediaStatusAsync()
         {
             await SendMessageAsync(ChromeCastMessages.GetMediaStatusMessage(GetNextRequestId(), chromeCastSource, chromeCastDestination));
@@ -185,7 +185,7 @@ namespace ChromeCast.Library.Networking
             await SendMessageAsync(ChromeCastMessages.GetStopMessage(chromeCastApplicationSessionNr, chromeCastMediaSessionId, GetNextRequestId(), chromeCastSource, chromeCastDestination));
         }
 
-        public async Task ConnectAsync(string sourceId = null, string destinationId = null)
+        public async Task ConnectAsync(string sourceId = null, string destinationId = null, Action connectedCallback = null)
         {
             await SendMessageAsync(ChromeCastMessages.GetConnectMessage(sourceId, destinationId));
 
@@ -200,6 +200,11 @@ namespace ChromeCast.Library.Networking
                 else
                 {
                     await ConnectRecordingDataAsync(socket);
+                }
+
+                if (connectedCallback != null)
+                {
+                    connectedCallback();
                 }
             };
 

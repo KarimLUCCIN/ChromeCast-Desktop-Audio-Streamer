@@ -51,7 +51,7 @@ namespace MiniCast.Client.Controls
 
         private void Stops_Changed(object sender, EventArgs e)
         {
-            foreach(var color in previousStops)
+            foreach (var color in previousStops)
             {
                 color.Changed -= Color_Changed;
             }
@@ -76,6 +76,15 @@ namespace MiniCast.Client.Controls
             base.RaisePropertyChanged(propertyName);
 
             GradientChanged?.Invoke(this);
+
+            if (propertyName == nameof(Start))
+            {
+                Start.Changed += delegate { GradientChanged?.Invoke(this); };
+            }
+            else if (propertyName == nameof(End))
+            {
+                End.Changed += delegate { GradientChanged?.Invoke(this); };
+            }
         }
     }
 }

@@ -85,7 +85,7 @@ namespace MiniCast.Client.Spectrum.Models
                 }
             }
 
-            var finalColor = baseColor + totalColor / bins.Count;
+            var finalColor = baseColor + (totalColor / bins.Count) * MusicColor.NormalizedSensitivity;
 
             CurrentColor = new Color() { ScR = finalColor.X, ScG = finalColor.Y, ScB = finalColor.Z, ScA = 1.0f };
             CurrentColorVersion++;

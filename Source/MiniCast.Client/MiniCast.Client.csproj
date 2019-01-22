@@ -304,8 +304,8 @@
     </Compile>
     <Compile Include="Converters\DeviceStateToStringConverter.cs" />
     <Compile Include="Core\SelectedItemToContentConverter.cs" />
-    <Compile Include="Effects\ColoredQuadEffect.cs" />
     <Compile Include="Helpers\ColorHelpers.cs" />
+    <Compile Include="Helpers\DeferredStream.cs" />
     <Compile Include="Helpers\GridHelpers.cs" />
     <Compile Include="Spectrum\Controls\AudioLine.xaml.cs">
       <DependentUpon>AudioLine.xaml</DependentUpon>
@@ -479,9 +479,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Spectrum\Credits.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ColoredQuadShader.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ColorWheel\Assets\Icons\rgb.png" />

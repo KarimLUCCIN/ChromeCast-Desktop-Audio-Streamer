@@ -22,12 +22,15 @@ namespace MiniCast.Client.ViewModel
         public GradientSpan ColorGradient { get; } = new GradientSpan();
 
         public Color BaseColor { get; set; }
+        public int Sensitivity { get; set; } = 100;
+        public float NormalizedSensitivity => Sensitivity / 100f;
 
         private DispatcherTimer saveTimer;
         private bool colorsDirty = false;
 
         public MusicColorViewModel()
         {
+            Sensitivity = CrossSettings.Current.Get<int>("MusicColor.Sensitivity", 100);
             BaseColor = LoadColor(nameof(BaseColor), Color.FromRgb(100, 200, 0));
 
             LoadGradient();
@@ -60,6 +63,7 @@ namespace MiniCast.Client.ViewModel
 
         private void SaveGradient()
         {
+            CrossSettings.Current.Set("MusicColor.Sensitivity", Sensitivity);
             SaveColor("Start", ColorGradient.Start.Color);
             SaveColor("End", ColorGradient.End.Color);
 

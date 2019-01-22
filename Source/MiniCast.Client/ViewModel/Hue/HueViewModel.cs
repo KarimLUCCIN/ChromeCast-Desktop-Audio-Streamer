@@ -1,7 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
+using MiniCast.Client.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,14 @@ namespace MiniCast.Client.ViewModel.Hue
         public HueDevicesEnumeratorViewModel DevicesEnumeratorViewModel { get; } = new HueDevicesEnumeratorViewModel();
 
         public bool Updating { get; private set; }
+
+        private DeferredStream<Color> deferredStreamColor = new DeferredStream<Color>((a, b, amount) => ColorHelpers.Lerp(a, b, (float)amount));
+
+        public TimeSpan AudioDelay
+        {
+            get { return deferredStreamColor.Delay; }
+            set { deferredStreamColor.Delay = value; }
+        }
 
         public HueViewModel()
         {
@@ -52,6 +62,9 @@ namespace MiniCast.Client.ViewModel.Hue
             Updating = true;
 
             var liveColorVm = ViewModelLocator.Instance.LiveColor;
+            var chromecastDevicesVm = ViewModelLocator.Instance.Chromecast;
+
+
             ulong lastColorVersion = ulong.MaxValue;
 
             while (true)
@@ -60,7 +73,14 @@ namespace MiniCast.Client.ViewModel.Hue
 
                 if (lastColorVersion != liveColorVm.CurrentColorVersion)
                 {
-                    var currentColor = GammaCorrect(liveColorVm.CurrentColor);
+                    var delayInstant = (chromecastDevicesVm.CurrentDevice?.AudioDelay ?? AudioDelay);
+
+                    AudioDelay = TimeSpan.FromSeconds(.95 * AudioDelay.TotalSeconds + 0.05 * delayInstant.TotalSeconds);
+                    Debug.WriteLine($"Delay: {AudioDelay.TotalSeconds}");
+
+                    deferredStreamColor.Add(GammaCorrect(liveColorVm.CurrentColor));
+
+                    var currentColor = deferredStreamColor.GetCurrent();
 
                     foreach (var device in DevicesEnumeratorViewModel.KnownDevices)
                     {
